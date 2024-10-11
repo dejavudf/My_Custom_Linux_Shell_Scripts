@@ -1,6 +1,6 @@
 #!/bin/bash
 # Myyoutube to mp3 script by Alexsandro Farias (dejavudf@gmail.com)
-# version 1.0 - built 20240909
+# version 1.0 - built 20241009
 # Ubuntu/Debian
 
 echo "Atualizando yt-dlp. Aguarde..."
