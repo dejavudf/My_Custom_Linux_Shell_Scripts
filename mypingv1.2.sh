@@ -1,6 +1,6 @@
 #!/bin/bash
 # Myping script by Alexsandro Farias (dejavudf@gmail.com)
-# version 1.2 - built 20200922
+# version 1.2 - built 20241007
 # Ubuntu/Debian
 
 #var declare
