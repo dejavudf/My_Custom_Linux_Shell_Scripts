@@ -1,6 +1,6 @@
 #!/bin/bash
 # Myhasg script by Alexsandro Farias (dejavudf@gmail.com)
-# version 1.0 - built 20210922
+# version 1.0 - built 20241010
 # Ubuntu/Debian
 
 var_looping=1
