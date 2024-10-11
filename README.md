@@ -1,5 +1,5 @@
 # My_Custom_Linux_Shell_Scripts
-My Custom Linux Shell Scripts by dejavudf
+My Custom Linux Shell Scripts by dejavudf (dejavudf@gmail.com)
 
 capturev1.0.sh: tcpdump with menu (options: protocol, target ip/subnet, port, save file, run in background)
 
