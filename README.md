@@ -3,6 +3,8 @@ My Custom Linux Shell Scripts by dejavudf
 
 capturev1.0.sh: tcpdump with menu (options: protocol, target ip/subnet, port, save file, run in background)
 
+dialog_tui_menuv1.0.sh: learn to use dialog with text user interface
+
 mp3v1.0.sh: youtube to mp3 (160kbitrate) via yt-dl
 
 mp4v1.0.sh: youtube to mp4 (best video/audio quality) via yt-dl
@@ -10,3 +12,5 @@ mp4v1.0.sh: youtube to mp4 (best video/audio quality) via yt-dl
 myhashv1.0: calc file hash with md5 or sha
 
 mypingv1.2sh: ping with menu (options: size, dfbit, time, save to file, run in background)
+
+whiptail_tui_menuv1.0.sh: learn to use whiptail with text user interface
