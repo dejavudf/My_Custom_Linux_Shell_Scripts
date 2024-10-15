@@ -1,5 +1,6 @@
 #!/bin/bash
 # by dejavudf
+# version 1.0 - 20241015
 # Github Repository Download and Compact (zip)
 VAR_DT=$(date '+Date%d_%m_%Y_Hour%H_%M_%S')
 VAR_FILE=""
