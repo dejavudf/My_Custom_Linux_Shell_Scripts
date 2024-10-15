@@ -1,35 +1,35 @@
 #!/bin/bash
 # by dejavudf
 # version 1.0 - 20241015
-# Github Repository Download and Compact (zip)
-VAR_DT=$(date '+Date%d_%m_%Y_Hour%H_%M_%S')
-VAR_FILE=""
+# find file type, save file path to list, filter text inside file, set result to var and work with result file to do something
 
-clear
-if [ -f ./gitlist.txt ] || [ ! -r ./gitlist.txt ]
-then
-        for VAR_FILE in $(cat ./gitlist.txt)
-        do
-                git clone https://github.com/dejavudf/$VAR_FILE
-                if [ $? == 0 ]
-                then
-                        echo "Success: Repository download completed"
-                        mv ./$VAR_FILE ./github-dejavudf/$VAR_FILE
-                else
-                        echo "Error: Repository download not completed"
-                fi
-        done
-        echo "Compacting Repositories. Wait..."
-        tar -zcvf "$VAR_DT""bck_github.tgz" ./github-dejavudf
-        if [ $? == 0 ]
-        then
-                echo "Success: Repositories compact completed"
-                rm -Rf ./github-dejavudf/./*
-        else
-                echo "Error: Repositories compact not completed"
-        fi
-else
-        echo "Error: File gitlist.txt not found or not readable"
-        exit 1
-fi
-exit 0
+rm -Rf /data/temp/backup_config/*
+find ./ -type f | grep -i ".unl" > ./lista.txt
+cat ./lista.txt | while read VAR_FILE
+do
+	VAR_LAB_NAME=$(cat "$VAR_FILE" | grep -i "<lab name=" | awk -F"=\"" '{print $2}' | sed 's\.unl:<lab name\\g' | sed 's\" id\\g')
+	VAR_LAB_ID=$(cat "$VAR_FILE" | grep -i "<lab name=" | awk -F"=\"" '{print $3}' | sed 's\" version\\g')
+	VAR_NODE=$(cat "$VAR_FILE" | grep -i "<node id=" | awk -F"=\"" '{print $3,$2}' | sed 's\" type \#\g' | sed 's\" name\\g')
+	echo "$VAR_NODE" > /tmp/$VAR_LAB_ID.lab
+	cat /tmp/$VAR_LAB_ID.lab | while read VAR_LAB_FILE
+	do
+	VAR_CONFIG_NAME=$(echo "$VAR_LAB_FILE" | awk -F"#" '{print $1}')
+	VAR_CONFIG_ID=$(echo "$VAR_LAB_FILE" | awk -F"#" '{print $2}')
+	if [ -d /opt/unetlab/tmp/0/$VAR_LAB_ID ]
+	then
+		if [ ! -d /data/temp/backup_config/$VAR_LAB_ID ]
+		then
+			mkdir /data/temp/backup_config/$VAR_LAB_ID
+			echo "$VAR_LAB_ID" > "/data/temp/backup_config/$VAR_LAB_ID/$VAR_LAB_NAME.txt"
+			#echo "$VAR_LAB_NAME" > /data/temp/backup_config/$VAR_LAB_ID/$VAR_LAB_ID.txt
+		else
+			cp /opt/unetlab/tmp/0/$VAR_LAB_ID/$VAR_CONFIG_ID/startup-config /data/temp/backup_config/$VAR_LAB_ID/$VAR_CONFIG_NAME.cfg
+			cp "$VAR_FILE" "/data/temp/backup_config/$VAR_LAB_ID/"
+		fi
+	else
+		:
+	fi
+	done
+done
+exit
+
