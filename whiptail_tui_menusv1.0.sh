@@ -1,5 +1,5 @@
 #!/bin/bash
-# by Alexsandro Farias (dejavudf@gmail.com)
+# by dejavudf
 # version 1.0 - built 20241011
 # Ubuntu/Debian
 # Variables = No validation
