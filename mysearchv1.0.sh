@@ -1,5 +1,5 @@
 #!/bin/bash
-# Mysearch script by Alexsandro Farias (dejavudf@gmail.com)
+# Mysearch script by dejavudf
 # Search/find text inside text files
 # version 1.0 - built 20241012
 # Ubuntu/Debian
