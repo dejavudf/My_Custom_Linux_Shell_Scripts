@@ -23,9 +23,12 @@ then
         if [ $? == 0 ]
         then
                 echo "Success: Repositories compact completed"
+                rm -Rf ./github-dejavudf/$VAR_FILE
         else
                 echo "Error: Repositories compact not completed"
         fi
 else
         echo "Error: File gitlist.txt not found or not readable"
+        exit 1
 fi
+exit 0
