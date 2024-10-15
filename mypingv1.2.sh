@@ -1,5 +1,5 @@
 #!/bin/bash
-# Myping script by Alexsandro Farias (dejavudf@gmail.com)
+# Myping script by dejavudf
 # version 1.2 - built 20241007
 # Ubuntu/Debian
 
