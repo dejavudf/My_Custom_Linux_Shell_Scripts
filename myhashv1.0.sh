@@ -1,5 +1,5 @@
 #!/bin/bash
-# Myhasg script by Alexsandro Farias (dejavudf@gmail.com)
+# Myhasg script by dejavudf
 # version 1.0 - built 20241010
 # Ubuntu/Debian
 
