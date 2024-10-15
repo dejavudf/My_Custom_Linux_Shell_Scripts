@@ -1,5 +1,5 @@
 #!/bin/bash
-# mycapture Packet script by Alexsandro Farias (dejavudf@gmail.com)
+# mycapture Packet script by dejavudf
 # version 1.0 - built 20241010
 # Ubuntu/Debian
 
