@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # by dejavudf
 # version 1.0 - 20241015
@@ -21,6 +20,7 @@ do
                 if [ ! -d /data/temp/backup_config/$VAR_LAB_ID ]
                 then
                         mkdir /data/temp/backup_config/$VAR_LAB_ID
+                        echo "$VAR_LAB_ID" > "/data/temp/backup_config/$VAR_LAB_ID/$VAR_LAB_NAME.txt"
                         echo "$VAR_LAB_NAME" > /data/temp/backup_config/$VAR_LAB_ID/$VAR_LAB_ID.txt
                 else
                         cp /opt/unetlab/tmp/0/$VAR_LAB_ID/$VAR_CONFIG_ID/startup-config /data/temp/backup_config/$VAR_LAB_ID/$VAR_CONFIG_NAME.cfg
