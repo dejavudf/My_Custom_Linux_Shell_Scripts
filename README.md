@@ -1,6 +1,8 @@
 # My_Custom_Linux_Shell_Scripts
 My Custom Linux Shell Scripts by dejavudf
 
+backup_gitbhub_repos.sh: backup repository txt list and compact all
+
 capturev1.0.sh: tcpdump with menu (options: protocol, target ip/subnet, port, save file, run in background)
 
 dialog_tui_menuv1.0.sh: learn to use dialog with text user interface
