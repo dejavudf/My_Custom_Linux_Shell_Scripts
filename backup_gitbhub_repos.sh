@@ -23,7 +23,7 @@ then
         if [ $? == 0 ]
         then
                 echo "Success: Repositories compact completed"
-                rm -Rf ./github-dejavudf/$VAR_FILE
+                rm -Rf ./github-dejavudf/./*
         else
                 echo "Error: Repositories compact not completed"
         fi
