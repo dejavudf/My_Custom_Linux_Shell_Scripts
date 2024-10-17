@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# A fazer. inicio em 17/10/2024 desafio.
 #Var Posisitons
 #----------------
 #| P1 | P2 | P3 |
@@ -20,10 +20,40 @@ VAR_P8=" "
 VAR_P9=" "
 VAR_COUNT=1
 VAR_WINNER=0
+VAR_WINNER_PLAYER=0
+
+CHECK_WINNER()
+        {
+                if [ $VAR_P1 == $VAR_P2 ] && [ $VAR_P2 == $VAR_P3 ]
+
+        }
 
 CHECK_GAME()
         {
-                if [ $VARP
+                if [ $VAR_P1 == $VAR_P2 ] && [ $VAR_P2 == $VAR_P3 ]
+                then
+                       CHECK_WINNER
+                elif [ $VAR_P4 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P6 ]
+                then
+                        CHECK_WINNER
+                elif [ $VAR_P7 == $VAR_P8 ] && [ $VAR_P8 == $VAR_P9 ]
+                then
+                        CHECK_WINNER
+                elif [ $VAR_P1 == $VAR_P4 ] && [ $VAR_P4 == $VAR_P7 ]
+                then
+                        CHECK_WINNER
+                elif [ $VAR_P2 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P8 ]
+                then
+                        CHECK_WINNER
+                elif [ $VAR_P3 == $VAR_P6 ] && [ $VAR_P6 == $VAR_P9 ]
+                then
+                        CHECK_WINNER
+                elif [ $VAR_P1 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P9 ]
+                then
+                        CHECK_WINNER
+                else
+                        VAR_WINNER=0
+                fi
         }
 
 while [ $VAR_CONTADOR -lt 10 ]
