@@ -18,7 +18,13 @@ VAR_P6=" "
 VAR_P7=" "
 VAR_P8=" "
 VAR_P9=" "
-VAR_CONTADOR=1
+VAR_COUNT=1
+VAR_WINNER=0
+
+CHECK_GAME()
+        {
+                if [ $VARP
+        }
 
 while [ $VAR_CONTADOR -lt 10 ]
 do
@@ -32,5 +38,15 @@ do
         echo "-------------"
         sleep 2
         VAR_CONTADOR+=1
+        FC_CHECK_GAME
+        if [ $VAR_WINNER = 1 ]
+        then
+                echo "Player 1 (X) wins"
+        elif [ $VAR_WINNER = 1 ]
+        then
+              echo "Player 2 (O) wins"  
+        else
+                continue
+        fi      
 done
 
