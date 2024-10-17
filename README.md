@@ -17,8 +17,8 @@ myhashv1.0: calc file hash with md5 or sha
 
 mypingv1.2sh: ping with menu (options: size, dfbit, time, save to file, run in background)
 
-mysearchv1.0sh: find/search text inside files with tui menu (recursive directories)
+mysearchv1.0sh: find/search text inside files with tui menu (recursive directories) - show file name and line number only
 
-mysearchv2.0sh: find/search text inside files with tui menu (recursive directories)
+mysearchv2.0sh: find/search text inside files with tui menu (recursive directories) - show file by file (full text)
 
 whiptail_tui_menuv1.0.sh: learn to use whiptail with text user interface
