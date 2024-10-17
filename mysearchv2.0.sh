@@ -22,7 +22,7 @@ do
 	then
 		VAR_TEXT_VALIDATION=1
 	else
-		find ./ -type f | grep -i ".sh" | while read VAR_FILE
+		find ./ -type -name "*.sh" | while read VAR_FILE
 		do
 			find $VAR_FILE -type f -exec grep -iI "$VAR_TEXT" {} \;
 			clear
