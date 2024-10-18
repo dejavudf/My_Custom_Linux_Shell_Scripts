@@ -21,6 +21,6 @@ mysearchv1.0sh: find/search text inside files with tui menu (recursive directori
 
 mysearchv2.0sh: find/search text inside files with tui menu (recursive directories) - show file by file (full text)
 
-tic_toc_toe_jogo_velha_br.sh: tic toc toe game - jogo da velha no brasil
+tic_toc_toe_jogo_velha_brv1.0.sh: tic toc toe game - jogo da velha no brasil
 
 whiptail_tui_menuv1.0.sh: learn to use whiptail with text user interface
