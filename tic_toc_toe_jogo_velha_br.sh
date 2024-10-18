@@ -33,72 +33,41 @@ CHECK_WINNER()
 		if [ $VAR_P1 == $VAR_P2 ] && [ $VAR_P2 == $VAR_P3 ]
                 then
 			VAR_WINNER=1
-			if [ $VAR_P1 = X ]
-			then
-				VAR_WINNER_PLAYER=1
-			else
-				VAR_WINNER_PLAYER=2
-			fi
+			VAR_WINNER_PLAYER=$VAR_P1
                 elif [ $VAR_P4 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P6 ]
                 then
                         VAR_WINNER=1
-			if [ $VAR_P4 = X ]
-                        then
-                                VAR_WINNER_PLAYER=1
-                        else
-                                VAR_WINNER_PLAYER=2
-                        fi
+			VAR_WINNER_PLAYER=$VAR_P4
                 elif [ $VAR_P7 == $VAR_P8 ] && [ $VAR_P8 == $VAR_P9 ]
                 then
                         VAR_WINNER=1
-			if [ $VAR_P7 = X ]
-                        then
-                                VAR_WINNER_PLAYER=1
-                        else
-                                VAR_WINNER_PLAYER=2
-                        fi
+			VAR_WINNER_PLAYER=$VAR_P7
                 elif [ $VAR_P1 == $VAR_P4 ] && [ $VAR_P4 == $VAR_P7 ]
                 then
                         VAR_WINNER=1
-			if [ $VAR_P1 = X ]
-                        then
-                                VAR_WINNER_PLAYER=1
-                        else
-                                VAR_WINNER_PLAYER=2
-                        fi
+                        VAR_WINNER_PLAYER=$VAR_P1
                 elif [ $VAR_P2 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P8 ]
                 then
-                        VAR_WINNER=1
-			if [ $VAR_P2 = X ]
-                        then
-                                VAR_WINNER_PLAYER=1
-                        else
-                                VAR_WINNER_PLAYER=2
-                        fi
+			VAR_WINNER=1
+			VAR_WINNER_PLAYER=$VAR_P2
                 elif [ $VAR_P3 == $VAR_P6 ] && [ $VAR_P6 == $VAR_P9 ]
                 then
                         VAR_WINNER=1
-			if [ $VAR_P3 = X ]
-                        then
-                                VAR_WINNER_PLAYER=1
-                        else
-                                VAR_WINNER_PLAYER=2
-                        fi
+                        VAR_WINNER_PLAYER=$VAR_P3
                 elif [ $VAR_P1 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P9 ]
                 then
                         VAR_WINNER=1
-			if [ $VAR_P1 = X ]
-                        then
-                                VAR_WINNER_PLAYER=1
-                        else
-                                VAR_WINNER_PLAYER=2
-                        fi
+                        VAR_WINNER_PLAYER=$VAR_P1
+		elif [ $VAR_P7 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P3 ]
+                then
+                        VAR_WINNER=1
+                        VAR_WINNER_PLAYER=$VAR_P7
 		else
                         VAR_WINNER=0
                 fi
         }
 
-while [ $VAR_COUNT -lt 10 ]
+while [ $VAR_COUNT -lt 11 ]
 do
 	if [ $(($VAR_COUNT%2)) == 0 ]
 	then
@@ -118,8 +87,23 @@ do
         	echo "-------------"
         	if [ $VAR_WINNER = 1 ]
 		then
-			echo "O Jogador $VAR_WINNER_PLAYER é o vencedor!"
-			exit 0
+			if [ $VAR_WINNER_PLAYER = X ]
+			then
+				echo "O Jogador 1 (X) vencedor!"
+				exit 0
+			elif [ $VAR_WINNER_PLAYER = O ]
+			then
+				echo "O Jogador 2 (O) é o vencedor!"
+				exit 0
+			fi
+		else
+			:
+		fi
+		if [ $VAR_COUNT == 10 ]
+		then
+			break
+		else
+			:
 		fi
 		echo "Jogada $VAR_COUNT de 9"
 		echo -n "Jogador $VAR_PLAYER, escolha a posição: "
@@ -161,5 +145,3 @@ then
 else
 	exit 0
 fi
-
-
