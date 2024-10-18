@@ -1,6 +1,6 @@
 #!/bin/bash
 # Search text inside files list (tree ./*) and show file by Alexsandro Farias (dejavudf@gmail.com)
-# version 2.0 - built 20200916
+# version 2.0 - built 20200918
 # Ubuntu/Debian
 
 VAR_TEXT=""
@@ -22,16 +22,23 @@ do
 	then
 		VAR_TEXT_VALIDATION=1
 	else
-		find ./ -type -name "*.sh" | while read VAR_FILE
+		find ./ -type f | grep -i ".sh" | while read VAR_FILE
 		do
-			find $VAR_FILE -type f -exec grep -iI "$VAR_TEXT" {} \;
 			clear
-			whiptail --clear --scrolltext --title "Text: $VAR_TEXT | File: $VAR_FILE | Press ESC to view next file" --textbox $VAR_FILE --ok-button "Quit" 0 0
-			if [ $? == 255 ]
+			echo "Searching text '"$VAR_TEXT"' inside files. Please, wait..."
+			VAR_CONTENT=$(find $VAR_FILE -type f -exec grep -iI "$VAR_TEXT" {} \;)
+			if [ -n $VAR_CONTENT ]
 			then
 				continue
 			else
-				break
+				clear
+				whiptail --clear --scrolltext --title "Text: $VAR_TEXT | File: $VAR_FILE | Press ESC to view next file" --textbox $VAR_FILE --ok-button "Quit" 0 0
+				if [ $? == 255 ]
+				then
+					continue
+				else
+					break
+				fi
 			fi
 		done
 	fi
