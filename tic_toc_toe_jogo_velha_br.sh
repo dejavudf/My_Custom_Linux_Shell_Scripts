@@ -1,5 +1,8 @@
 #!/bin/bash
-# A fazer. inicio em 17/10/2024 desafio.
+# mytictoctoe game (jogo da velha) by dejavudf
+# version 1.0 - built 20241017
+# Ubuntu/Debian
+
 #Var Posisitons
 #----------------
 #| P1 | P2 | P3 |
@@ -9,74 +12,154 @@
 #| P7 | P8 | P9 |
 #----------------
 
-VAR_P1=" "
-VAR_P2=" "
-VAR_P3=" "
-VAR_P4=" "
-VAR_P5=" "
-VAR_P6=" "
-VAR_P7=" "
-VAR_P8=" "
-VAR_P9=" "
+VAR_P1="1"
+VAR_P2="2"
+VAR_P3="3"
+VAR_P4="4"
+VAR_P5="5"
+VAR_P6="6"
+VAR_P7="7"
+VAR_P8="8"
+VAR_P9="9"
 VAR_COUNT=1
 VAR_WINNER=0
 VAR_WINNER_PLAYER=0
+VAR_PLAYER=1
+VAR_PLAY=0
+VAR_PLAY_VALIDATION=1
 
 CHECK_WINNER()
-        {
-                if [ $VAR_P1 == $VAR_P2 ] && [ $VAR_P2 == $VAR_P3 ]
-
-        }
-
-CHECK_GAME()
-        {
-                if [ $VAR_P1 == $VAR_P2 ] && [ $VAR_P2 == $VAR_P3 ]
+	{
+		if [ $VAR_P1 == $VAR_P2 ] && [ $VAR_P2 == $VAR_P3 ]
                 then
-                       CHECK_WINNER
+			VAR_WINNER=1
+			if [ $VAR_P1 = X ]
+			then
+				VAR_WINNER_PLAYER=1
+			else
+				VAR_WINNER_PLAYER=2
+			fi
                 elif [ $VAR_P4 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P6 ]
                 then
-                        CHECK_WINNER
+                        VAR_WINNER=1
+			if [ $VAR_P4 = X ]
+                        then
+                                VAR_WINNER_PLAYER=1
+                        else
+                                VAR_WINNER_PLAYER=2
+                        fi
                 elif [ $VAR_P7 == $VAR_P8 ] && [ $VAR_P8 == $VAR_P9 ]
                 then
-                        CHECK_WINNER
+                        VAR_WINNER=1
+			if [ $VAR_P7 = X ]
+                        then
+                                VAR_WINNER_PLAYER=1
+                        else
+                                VAR_WINNER_PLAYER=2
+                        fi
                 elif [ $VAR_P1 == $VAR_P4 ] && [ $VAR_P4 == $VAR_P7 ]
                 then
-                        CHECK_WINNER
+                        VAR_WINNER=1
+			if [ $VAR_P1 = X ]
+                        then
+                                VAR_WINNER_PLAYER=1
+                        else
+                                VAR_WINNER_PLAYER=2
+                        fi
                 elif [ $VAR_P2 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P8 ]
                 then
-                        CHECK_WINNER
+                        VAR_WINNER=1
+			if [ $VAR_P2 = X ]
+                        then
+                                VAR_WINNER_PLAYER=1
+                        else
+                                VAR_WINNER_PLAYER=2
+                        fi
                 elif [ $VAR_P3 == $VAR_P6 ] && [ $VAR_P6 == $VAR_P9 ]
                 then
-                        CHECK_WINNER
+                        VAR_WINNER=1
+			if [ $VAR_P3 = X ]
+                        then
+                                VAR_WINNER_PLAYER=1
+                        else
+                                VAR_WINNER_PLAYER=2
+                        fi
                 elif [ $VAR_P1 == $VAR_P5 ] && [ $VAR_P5 == $VAR_P9 ]
                 then
-                        CHECK_WINNER
-                else
+                        VAR_WINNER=1
+			if [ $VAR_P1 = X ]
+                        then
+                                VAR_WINNER_PLAYER=1
+                        else
+                                VAR_WINNER_PLAYER=2
+                        fi
+		else
                         VAR_WINNER=0
                 fi
         }
 
-while [ $VAR_CONTADOR -lt 10 ]
+while [ $VAR_COUNT -lt 10 ]
 do
-        clear
-        echo "-------------"
-        echo  "| $VAR_P1 | $VAR_P2 | $VAR_P3 |"
-        echo "-------------"
-        echo  "| $VAR_P4 | $VAR_P5 | $VAR_P6 |"
-        echo "-------------"
-        echo  "| $VAR_P7 | $VAR_P8 | $VAR_P9 |"
-        echo "-------------"
-        sleep 2
-        VAR_CONTADOR+=1
-        FC_CHECK_GAME
-        if [ $VAR_WINNER = 1 ]
-        then
-                echo "Player 1 (X) wins"
-        elif [ $VAR_WINNER = 1 ]
-        then
-              echo "Player 2 (O) wins"  
-        else
-                continue
-        fi      
+	if [ $(($VAR_COUNT%2)) == 0 ]
+	then
+		VAR_PLAYER=2
+	else
+		VAR_PLAYER=1
+	fi
+	until [ $VAR_PLAY_VALIDATION == 0 ]
+	do
+		clear
+       		echo "-------------"
+        	echo  "| $VAR_P1 | $VAR_P2 | $VAR_P3 |"
+        	echo "-------------"
+        	echo  "| $VAR_P4 | $VAR_P5 | $VAR_P6 |"
+        	echo "-------------"
+        	echo  "| $VAR_P7 | $VAR_P8 | $VAR_P9 |"
+        	echo "-------------"
+        	if [ $VAR_WINNER = 1 ]
+		then
+			echo "O Jogador $VAR_WINNER_PLAYER é o vencedor!"
+			exit 0
+		fi
+		echo "Jogada $VAR_COUNT de 9"
+		echo -n "Jogador $VAR_PLAYER, escolha a posição: "
+        	read -n 1 VAR_PLAY
+		if [[ ! $VAR_PLAY =~ ^[1-9]+$ ]]
+		then
+			VAR_PLAY_VALIDATION=1
+		else
+			echo "$VAR_P1 $VAR_P2 $VAR_P3 $VAR_P4 $VAR_P5 $VAR_P6 $VAR_P7 $VAR_P8 $VAR_P9" | grep -i $VAR_PLAY 3>&2 2>&1 1>&3
+			if [ $? == 0 ]
+			then
+				if [ $VAR_PLAYER == 1 ]
+				then
+					eval VAR_P${VAR_PLAY}=X
+					VAR_PLAY_VALIDATION=0
+				elif [ $VAR_PLAYER == 2 ]
+				then
+					eval VAR_P${VAR_PLAY}=O
+					VAR_PLAY_VALIDATION=0
+				fi
+			else
+				VAR_PLAY_VALIDATION=1
+			fi
+		fi
+	done
+	VAR_COUNT=$((VAR_COUNT+1))
+	VAR_PLAY_VALIDATION=1
+	CHECK_WINNER
+	if [ $VAR_WINNER = 1 ]
+	then
+		:
+	else
+		:
+	fi
 done
+if [ $VAR_WINNER = 0 ]
+then
+	echo "O jogo terminou empatado"
+else
+	exit 0
+fi
+
 
