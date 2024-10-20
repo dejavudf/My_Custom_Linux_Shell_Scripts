@@ -13,6 +13,8 @@ mp3v1.0.sh: youtube to mp3 (160kbitrate) via yt-dl
 
 mp4v1.0.sh: youtube to mp4 (best video/audio quality) via yt-dl
 
+myclockv1.0.sh: very simple clock simulator with sleep command
+
 myhashv1.0: calc file hash with md5 or sha
 
 mypingv1.2sh: ping with menu (options: size, dfbit, time, save to file, run in background)
