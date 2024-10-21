@@ -11,7 +11,10 @@ while true
 do
         clear
         echo "#####################"
-        echo "#  Clock: $VAR_HOUR:$VAR_MINUTE:$VAR_SECOND"
+        VAR_HOUR_00=$(printf '%02d\n' $VAR_HOUR)
+        VAR_MINUTE_00=$(printf '%02d\n' $VAR_MINUTE)
+        VAR_SECOND_00=$(printf '%02d\n' $VAR_SECOND)
+        echo "#  Clock: $VAR_HOUR_00:$VAR_MINUTE_00:$VAR_SECOND_00  #"
         echo "#####################"
         sleep 1
         if [ $VAR_SECOND == 59 ]
