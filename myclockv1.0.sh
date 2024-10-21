@@ -3,9 +3,9 @@
 # version 1.0 - built 20241018
 # Ubuntu/Debian
 
-VAR_HOUR=0
-VAR_MINUTE=0
-VAR_SECOND=0
+VAR_HOUR=0 
+VAR_MINUTE=0 
+VAR_SECOND=0 
 
 while true
 do
@@ -18,7 +18,7 @@ do
         then
                 VAR_SECOND=0
                 VAR_MINUTE=$((VAR_MINUTE+1))
-                if [ $VAR_MINUTE == 59 ]
+                if [ $VAR_MINUTE == 60 ]
                 then
                         VAR_MINUTE=0
                         if [ $VAR_HOUR == 23 ]
@@ -34,4 +34,3 @@ do
                 VAR_SECOND=$((VAR_SECOND+1))
         fi
 done
-
