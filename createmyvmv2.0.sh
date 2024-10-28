@@ -1,10 +1,10 @@
 #!/bin/bash
-# mycreatevm script - create virtual machine using virtinstall (goto menu style)
+# mycreatevm script - create virtual machine using virtinstall
 # version 2.0 - build 28/10/2024
 # by dejavudf
 
 #whiptail parameter to var
-VAR_BT_AQ="--ok-button Enter --cancel-button  Quit"
+VAR_BT_AQ="--ok-button Enter --cancel-button  Back"
 VAR_BT_C="Continue"
 VAR_T="Create Virtual Machine - VirtInstall"
 VAR_BKT="dejavudf@gmail.com - https//github.com/dejavudf/"
@@ -14,7 +14,7 @@ FUNC_MAIN_MENU() {
 until [ $VAR_MAIN_MENU_VALIDATION == 0 ]
 do
         clear
-        VAR_MAIN_MENU=$(whiptail --clear $VAR_BT_AQ --title "$VAR_T" --backtitle "Create VM with Virt-Install" --menu "Main Menu:" \
+        VAR_MAIN_MENU=$(whiptail --clear --ok-button "Enter" --cancel-button "Quit" --title "$VAR_T" --backtitle "Create VM with Virt-Install" --menu "Main Menu:" \
 	0 0 11 "1" "> Name: $VAR_VM_NAME" "2" "> RAM (Mb): $VAR_VM_RAM" "3" "> CPU: x $VAR_CPU" "4" "> Machine Type: $VAR_MACHINE_TYPE" \
 	"5" "> OS Type/Variant: $VAR_OS_TYPE" "6" "> Graph: $VAR_GRAPH" "7" "> Boot Disk: $VAR_BOOT $VAR_CDR" "8" "> Disk Size (Gb): $VAR_DISK_SIZE" \
 	"9" "> Disk Bus: $VAR_DISK_BUS" "10" "> Nic Type: $VAR_NET_MODEL" "11" ": Create VM" 3>&2 2>&1 1>&3)
@@ -97,7 +97,7 @@ do
 	0 0 3>&2 2>&1 1>&3)
 	if [ $? == 1 ]
 	then
-		exit
+		FUNC_MAIN_MENU
 	elif [ $? == 255 ]
 	then
 		VAR_VM_NAME_VALIDATION=1
@@ -134,7 +134,7 @@ do
 	0 0 5 "1" ": 512Mb" "2" ": 1Gb" "3" ": 2GB" "4" ": 4Gb" "5" ": 8Gb" 3>&2 2>&1 1>&3)
         if [ $? == 1 ]
 	then
-		exit
+		FUNC_MAIN_MENU
 	elif [ $? == 255 ]
 	then
 		VAR_VM_RAM_VALIDATION=1
@@ -179,7 +179,7 @@ do
 	0 0 4 "1" ": 1 x CPU" "2" ": 2 x CPU" "3" ": 4 x CPU" "4" ": 6 x CPU" 3>&2 2>&1 1>&3)
 	if [ $? == 1 ]
         then
-                exit
+                FUNC_MAIN_MENU
 	elif [ $? == 255 ]
 	then
 		VAR_CPU_VALIDATION=1
@@ -220,7 +220,7 @@ do
 	0 0 4 "1" ": Old PC i440FX" "2" ": New PC Q35" "3" ": Very Old PC ISA" "4" ": None" 3>&2 2>&1 1>&3)
 	if [ $? == 1 ]
         then
-                exit
+                FUNC_MAIN_MENU
 	elif [ $? == 255 ]
 	then
 		VAR_MACHINE_TYPE_VALIDATION=1
@@ -264,7 +264,7 @@ do
 	0 0 3>&2 2>&1 1>&3)
         if [ $? == 1 ]
         then
-                exit
+                FUNC_MAIN_MENU
         elif [ $? == 255 ]
 	then
 		VAR_OS_TYPE_VALIDATION=1
@@ -308,7 +308,7 @@ do
 	0 0 3 "1" ": VNC" "2" ": Console" "3" ": None" 3>&2 2>&1 1>&3)
         if [ $? == 1 ]
         then
-		exit
+		FUNC_MAIN_MENU
         elif [ $? = 255 ]
 	then
 		VAR_GRAPH_VALIDATION=1
@@ -345,7 +345,7 @@ do
 	0 0 3 "1" ": HD" "2" ": CD" "3" ": None" 3>&2 2>&1 1>&3)
         if [ $? == 1 ]
         then
-                exit
+                FUNC_MAIN_MENU
         elif [ $? = 255 ]
         then
                 VAR_BOOT_VALIDATION=1
@@ -384,7 +384,8 @@ then
         	VAR_CDR=$(whiptail --clear $VAR_BT_AQ --title "$VAR_T" --backtitle "CD Rom -> ISO file path" --inputbox 'Boot CD File:' 0 0 3>&2 2>&1 1>&3)
         	if [ $? == 1 ]
         	then
-                	exit
+                	VAR_BOOT=""
+			FUNC_BOOT
         	elif [ $? == 255 ]
         	then
                		VAR_CDR_VALIDATION=1
@@ -416,7 +417,7 @@ do
 	VAR_DISK_SIZE=$(whiptail --clear $VAR_BT_AQ --title "$VAR_T" --backtitle "Disk Size: 1Gb (min) to 40Gb (max)" --inputbox 'Disk Size (Gb):' 0 0 3>&2 2>&1 1>&3)
 	if [ $? == 1 ]
 	then
-		exit
+		FUNC_MAIN_MENU
 	elif [ $? == 255 ]
 	then
 		VAR_DISK_SIZE_VALIDATION=1
@@ -445,7 +446,7 @@ do
 	0 0 4 "1" ": IDE" "2" ": SATA" "3" ": SCSI" "4" ": Virtio" 3>&2 2>&1 1>&3)
         if [ $? == 1 ]
         then
-                exit
+                FUNC_MAIN_MENU
         elif [ $? = 255 ]
         then
                 VAR_DISK_BUS_VALIDATION=1
@@ -486,7 +487,7 @@ do
 	0 0 3 "1" ": e1000" "2" ": rtl8139" "3" ": virtio" 3>&2 2>&1 1>&3)
         if [ $? == 1 ]
         then
-                exit
+                FUNC_MAIN_MENU
         elif [ $? = 255 ]
         then
                 VAR_NET_MODEL_VALIDATION=1
