@@ -3,6 +3,14 @@
 # version 1.0 - build 25/10/2024
 # by dejavudf
 
+#change colours
+#export NEWT_COLORS='
+#window=,red
+#border=white,red
+#textbox=white,red
+#button=black,white
+#'
+
 #whiptail parameter to var
 VAR_BT_AQ="--ok-button Accept --cancel-button  Quit"
 VAR_BT_C="Continue"
