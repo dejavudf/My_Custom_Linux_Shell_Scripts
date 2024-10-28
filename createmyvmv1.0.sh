@@ -16,6 +16,15 @@ FUNC_INVALID_INPUT() {
 	whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB" --ok-button "$VAR_BT_C" 0 0
 }
 
+#check run as root (sudo)
+if [ whoami != root ]
+then
+        whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "You need to run this script as root or via sudo!" --ok-button "Quit" 0 0
+        exit 1
+else
+        :
+fi
+
 #Show Intro Info
 whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "Wellcome to MyCreateVm VirtInstall Script v1.0" --ok-button "$VAR_BT_C" 0 0
 
