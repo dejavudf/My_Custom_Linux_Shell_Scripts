@@ -1,5 +1,5 @@
 #!/bin/bash
-# mycreatevm script - create virtual machine using virtinstall
+# mycreatevm script - create virtual machine using virtinstall (sequential menu style)
 # version 1.0 - build 25/10/2024
 # by dejavudf
 
