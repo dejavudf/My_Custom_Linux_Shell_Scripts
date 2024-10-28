@@ -3,6 +3,10 @@ My Custom Linux Shell Scripts by dejavudf
 
 backup_gitbhub_repositoryv1.0.sh: backup repository txt list and compact all
 
+createmyvmv1.0.sh: create vm using virt-install (sequential)
+
+createmyvmv2.0.sh: create vm using virt-install (goto style: using main menu) - comming soon
+
 capturev1.0.sh: tcpdump with menu (options: protocol, target ip/subnet, port, save file, run in background)
 
 dialog_tui_menuv1.0.sh: learn to use dialog with text user interface
