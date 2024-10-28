@@ -1,7 +1,7 @@
 #!/bin/bash
 # mycreatevm script - create virtual machine using virtinstall
 # version 1.0 - build 25/10/2024
-# by dejavudf - dejavudf@gmail.com
+# by dejavudf
 
 #whiptail parameter to var
 VAR_BT_AQ="--ok-button Accept --cancel-button  Quit"
