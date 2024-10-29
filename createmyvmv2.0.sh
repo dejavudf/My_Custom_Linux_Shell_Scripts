@@ -9,7 +9,6 @@ export NEWT_COLORS='
 	entry=,gray
 	roottext=gray,black
 '
-
 #whiptail parameter to var
 VAR_BT_AQ="--ok-button Enter --cancel-button  Back"
 VAR_BT_C="Continue"
