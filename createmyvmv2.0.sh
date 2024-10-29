@@ -14,7 +14,7 @@ export NEWT_COLORS='
 VAR_BT_AQ="--ok-button Enter --cancel-button  Back"
 VAR_BT_C="Continue"
 VAR_T="Create Virtual Machine - VirtInstall"
-VAR_BKT="myemail@mailserver.com - https//github.com/dejavudf/"
+VAR_BKT="dejavudf@gmail.com - https//github.com/dejavudf/"
 VAR_MB="Invalid Input Value!"
 VAR_MB2="You've missed something. Please, fill all fields and try again"
 
@@ -529,9 +529,12 @@ FUNC_MAIN_MENU
 
 FUNC_CREATE() {
 if [ $VAR_VM_NAME = "" ] || [ $VAR_VM_RAM = "" ] || [ $VAR_CPU = "" ] || [ $VAR_MACHINE_TYPE = "" ] \
-[ $VAR_OS_TYPE = "" ] || [ $VAR_GRAPH = "" ] || [ $VAR_BOOT = "" ] || [ $VAR_CDR = "" ] || \
+[ $VAR_OS_TYPE = "" ] || [ $VAR_GRAPH = "" ] || [ $VAR_BOOT = "" ] || \
 [ $VAR_DISK_SIZE = "" ] || [ $VAR_DISK_BUS = "" ] || [ $VAR_NET_MODEL = "" ]
 then
+	FUNC_FIELD_EMPTY
+        FUNC_MAIN_MENU
+else
 	clear
 	echo "################################"
 	echo "# Creating VM. Please, wait... #"
@@ -552,9 +555,6 @@ then
 	else
 		:
 	fi
-else
-	FUNC_FIELD_EMPTY
-	FUNC_MAIN_MENU
 fi
 }
 
