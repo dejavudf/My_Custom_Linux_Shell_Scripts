@@ -13,7 +13,7 @@ export NEWT_COLORS='
 VAR_BT_AQ="--ok-button Enter --cancel-button  Back"
 VAR_BT_C="Continue"
 VAR_T="Create Virtual Machine - VirtInstall"
-VAR_BKT="dejavudf@gmail.com - https//github.com/dejavudf/"
+VAR_BKT="mymail@mailserver.com - https//github.com/dejavudf/"
 VAR_MB="Invalid Input Value!"
 VAR_MB2="You've missed something. Please, fill all fields and try again"
 
