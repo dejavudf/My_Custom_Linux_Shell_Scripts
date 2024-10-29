@@ -3,20 +3,20 @@
 # version 2.0 - build 28/10/2024
 # by dejavudf
 
-#change colours
-#export NEWT_COLORS='
-#window=,red
-#border=white,red
-#textbox=white,red
-#button=black,white
-#'
+#change colours - theme: Flamengo
+export NEWT_COLORS='
+	root=,gray
+	entry=,gray
+	roottext=gray,black
+'
 
 #whiptail parameter to var
 VAR_BT_AQ="--ok-button Enter --cancel-button  Back"
 VAR_BT_C="Continue"
 VAR_T="Create Virtual Machine - VirtInstall"
-VAR_BKT="mymail@mailserver.com - https//github.com/dejavudf/"
+VAR_BKT="dejavudf@gmail.com - https//github.com/dejavudf/"
 VAR_MB="Invalid Input Value!"
+VAR_MB2="You've missed something. Please, fill all fields and try again"
 
 FUNC_MAIN_MENU() {
 until [ $VAR_MAIN_MENU_VALIDATION == 0 ]
@@ -25,7 +25,7 @@ do
         VAR_MAIN_MENU=$(whiptail --clear --ok-button "Enter" --cancel-button "Quit" --title "$VAR_T" --backtitle "Create VM with Virt-Install" --menu "Main Menu:" \
 	0 0 11 "1" "> Name: $VAR_VM_NAME" "2" "> RAM (Mb): $VAR_VM_RAM" "3" "> CPU: x $VAR_CPU" "4" "> Machine Type: $VAR_MACHINE_TYPE" \
 	"5" "> OS Type/Variant: $VAR_OS_TYPE" "6" "> Graph: $VAR_GRAPH" "7" "> Boot Disk: $VAR_BOOT $VAR_CDR" "8" "> Disk Size (Gb): $VAR_DISK_SIZE" \
-	"9" "> Disk Bus: $VAR_DISK_BUS" "10" "> Nic Type: $VAR_NET_MODEL" "11" ": Create VM" 3>&2 2>&1 1>&3)
+	"9" "> Disk Bus: $VAR_DISK_BUS" "10" "> Nic Type (bridge mode): $VAR_NET_MODEL" "11" "> Create VM" 3>&2 2>&1 1>&3)
         if [ $? == 1 ]
         then
                 exit
@@ -78,6 +78,12 @@ done
 FUNC_INVALID_INPUT() {
 	clear
 	whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB" --ok-button "$VAR_BT_C" 0 0
+}
+
+#function for invalid input text (number, string, etcetera)
+FUNC_FIELD_EMPTY() {
+        clear
+        whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB2" --ok-button "$VAR_BT_C" 0 0
 }
 
 #script begin
@@ -547,6 +553,7 @@ then
 		:
 	fi
 else
+	FUNC_FIELD_EMPTY
 	FUNC_MAIN_MENU
 fi
 }
@@ -554,4 +561,3 @@ fi
 #Open begin main menu
 FUNC_MAIN_MENU
 exit 0
-
