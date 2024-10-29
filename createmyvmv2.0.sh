@@ -3,7 +3,7 @@
 # version 2.0 - build 28/10/2024
 # by dejavudf
 
-#change colours - theme: Flamengo
+#change colours - theme: Flamengo T-Shirt #3 2024
 export NEWT_COLORS='
 	root=,gray
 	entry=,gray
