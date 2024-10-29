@@ -528,7 +528,7 @@ FUNC_MAIN_MENU
 }
 
 FUNC_CREATE() {
-if [ $VAR_VM_NAME = "" ] || [ $VAR_VM_RAM = "" ] || [ $VAR_CPU = "" ] || [ $VAR_MACHINE_TYPE = "" ] \
+if [ $VAR_VM_NAME = "" ] || [ $VAR_VM_RAM = "" ] || [ $VAR_CPU = "" ] || [ $VAR_MACHINE_TYPE = "" ] || \
 [ $VAR_OS_TYPE = "" ] || [ $VAR_GRAPH = "" ] || [ $VAR_BOOT = "" ] || \
 [ $VAR_DISK_SIZE = "" ] || [ $VAR_DISK_BUS = "" ] || [ $VAR_NET_MODEL = "" ]
 then
