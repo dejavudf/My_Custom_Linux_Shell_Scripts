@@ -1,7 +1,7 @@
 #!/bin/bash
 # by dejavudf
 # version 1.0 - built 20241011
-# Ubuntu/Debian
+# tested and validated on debian/ubuntu/mint
 # Variables = No validation
 # this scripts just helps to learn how to use whiptail command
 # 0 0 = mean auto sized boxes
