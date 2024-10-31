@@ -1,7 +1,7 @@
 #!/bin/bash
 # Myyoutube to mp4 script by dejavudf
 # version 1.0 - built 20241005
-# Ubuntu/Debian
+# tested and validated on debian/ubuntu/mint
 
 echo "Atualizando yt-dlp. Aguarde..."
 ./yt-dlp --update-to nightly
