@@ -1,5 +1,5 @@
 #!/bin/bash
-# script to remove encapsulation layer (first x bytes) inside pcap file
+# script to remove encapsulation underlay like VXLAN, GENEVE and others (first x bytes) inside pcap file
 # by dejavudf
 # version 1.0 31/10/2024
 
