@@ -1,5 +1,4 @@
-# My_Custom_Linux_Shell_Scripts
-My Custom Linux Shell Scripts by dejavudf
+---> My Custom Linux Shell Scripts by dejavudf:
 
 backup_gitbhub_repositoryv1.0.sh: backup repository txt list and compact all
 
