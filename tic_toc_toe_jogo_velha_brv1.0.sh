@@ -1,7 +1,7 @@
 #!/bin/bash
 # mytictoctoe game (jogo da velha) by dejavudf
 # version 1.0 - built 20241018
-# Ubuntu/Debian
+# tested and validated on debian/ubuntu/mint
 
 #Var Posisitons
 #----------------
