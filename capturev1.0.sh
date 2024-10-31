@@ -1,7 +1,7 @@
 #!/bin/bash
 # mycapture Packet script by dejavudf
 # version 1.0 - built 20241010
-# Ubuntu/Debian
+# tested and validated on debian/ubuntu/mint
 
 #var declare
 var_dt=$(date '+Date_%d_%m_%Y_Time_%H_%M_%S')
