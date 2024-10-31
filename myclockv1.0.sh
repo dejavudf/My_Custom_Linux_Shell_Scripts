@@ -1,7 +1,7 @@
 #!/bin/bash
 # myclock by dejavudf
 # version 1.0 - built 20241018
-# Ubuntu/Debian
+# tested and validated on debian/ubuntu/mint
 
 VAR_HOUR=0 
 VAR_MINUTE=0 
