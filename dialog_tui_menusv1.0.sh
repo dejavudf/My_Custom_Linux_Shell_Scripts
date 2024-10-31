@@ -5,6 +5,7 @@
 # Variables = No validation
 # this scripts just helps to learn how to use dialog command
 # 0 0 = mean auto sized boxes
+# tested and validated on debian/ubuntu/mint
 
 #initial screen
 clear
