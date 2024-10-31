@@ -2,6 +2,7 @@
 # script to remove encapsulation underlay like VXLAN, GENEVE and others (first x bytes) inside pcap file
 # by dejavudf
 # version 1.0 31/10/2024
+# tested and validated on debian/ubuntu/mint
 
 #change colours - theme: Flamengo T-Shirt #3 2024
 export NEWT_COLORS='
