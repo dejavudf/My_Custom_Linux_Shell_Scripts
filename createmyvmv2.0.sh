@@ -2,6 +2,7 @@
 # mycreatevm script - create virtual machine using virtinstall
 # version 2.0 - build 28/10/2024
 # by dejavudf
+# tested and validated on debian/ubuntu/mint
 
 #change colours - theme: Flamengo T-Shirt #3 2024
 export NEWT_COLORS='
