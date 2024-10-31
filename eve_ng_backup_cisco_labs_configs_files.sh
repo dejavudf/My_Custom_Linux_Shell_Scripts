@@ -2,6 +2,7 @@
 # by dejavudf
 # version 1.0 - 20241015
 # find file type, save file path to list, filter text inside file, set result to var and work with result file to do something
+# tested and validated on debian/ubuntu/mint
 
 rm -Rf /data/temp/backup_config/*
 find ./ -type f | grep -i ".unl" > ./lista.txt
