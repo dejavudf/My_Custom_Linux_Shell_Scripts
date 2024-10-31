@@ -2,6 +2,7 @@
 # mycreatevm script - create virtual machine using virtinstall (sequential menu style)
 # version 1.0 - build 25/10/2024
 # by dejavudf
+# tested and validated on debian/ubuntu/mint
 
 #change colours
 #export NEWT_COLORS='
