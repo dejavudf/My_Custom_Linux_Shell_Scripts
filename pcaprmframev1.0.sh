@@ -104,7 +104,4 @@ else
 	whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_NI" --ok-button "$VAR_BT_Q" 0 0
 	exit 1
 fi
-
-#editcap -C 62 -L ./teste.pcap ./testeok4.pcap
-# 8287  editcap -I 62 ./teste.pcap ./testeok4.pcap 
-# 8289  editcap -C 62 -L ./teste.pcap ./testeok4.pcap 
+exit 1
