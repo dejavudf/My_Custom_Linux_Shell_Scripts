@@ -1,7 +1,7 @@
 #!/bin/bash
 # Myhasg script by dejavudf
 # version 1.0 - built 20241010
-# Ubuntu/Debian
+# tested and validated on debian/ubuntu/mint
 
 var_looping=1
 var_answer=3
