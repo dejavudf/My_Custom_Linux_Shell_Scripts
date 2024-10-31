@@ -2,7 +2,7 @@
 # Mysearch script by dejavudf
 # Search/find text inside text files
 # version 1.0 - built 20241012
-# Ubuntu/Debian
+# tested and validated on debian/ubuntu/mint
 
 VAR_TEXT=""
 VAR_TEXT_VALIDATION=1
