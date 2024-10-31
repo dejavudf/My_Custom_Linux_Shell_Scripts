@@ -1,7 +1,7 @@
 #!/bin/bash
 # Search text inside files list (tree ./*) and show file by Alexsandro Farias (dejavudf@gmail.com)
 # version 2.0 - built 20200918
-# Ubuntu/Debian
+# tested and validated on debian/ubuntu/mint
 
 VAR_TEXT=""
 VAR_TEXT_VALIDATION=1
