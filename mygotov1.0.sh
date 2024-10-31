@@ -2,6 +2,7 @@
 # mygoto style menus - by dejavudf
 # variables not validates
 # version: 1.0 build 28/10/2024
+# tested and validated on debian/ubuntu/mint
 
 func_main_menu() {
 clear
