@@ -1,7 +1,7 @@
 #!/bin/bash
 # Myping script by dejavudf
 # version 1.2 - built 20241007
-# Ubuntu/Debian
+# tested and validated on debian/ubuntu/mint
 
 #var declare
 var_dt=$(date '+Date_%d_%m_%Y_Time_%H_%M_%S')
