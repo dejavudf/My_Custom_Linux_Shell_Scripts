@@ -62,12 +62,13 @@ do
 	if [ $? == 1 ]
         then
                 VAR_VLAN_VALIDATION=0
+		VAR_VLAN=0
 		break
         elif [ $? == 255 ]
         then
                 VAR_VLAN_VALIDATION=1
         else
-			VAR_VLAN="--novlan"
+			VAR_VLAN=1
 			VAR_VLAN_VALIDATION=0
         fi
 done
@@ -102,7 +103,7 @@ done
 
 # script begin
 #check if editcap is installed before proceed
-editcap > /dev/null
+editcap 3>&2 2>&1 1>&3
 if [ $? == 1 ]
 then
 	whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_WC" --ok-button "$VAR_BT_C" 0 0
@@ -112,17 +113,39 @@ then
 	VAR_DESTINATION_FILE="${VAR_SOURCE_FILE%.pcap}_new.pcap"
 	clear
 	echo "Removing fist $VAR_BYTES bytes. Please, wait..."
-	editcap -C $VAR_BYTES -L -d $VAR_VLAN ./$VAR_SOURCE_FILE ./$VAR_DESTINATION_FILE
-	if [ $? == 0 ]
+	if [ $VAR_VLAN = 0 ]
 	then
-		whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "First $VAR_BYTES bytes removed. New File: $VAR_DESTINATION_FILE" --ok-button "$VAR_BT_Q" 0 0
-		exit 0
+		editcap -C $VAR_BYTES -L ./$VAR_SOURCE_FILE ./$VAR_DESTINATION_FILE
+		if [ $? == 0 ]
+		then
+			whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "First $VAR_BYTES bytes removed. New File: $VAR_DESTINATION_FILE" --ok-button "$VAR_BT_Q" 0 0
+			exit 0
+		else
+			whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_ECE" --ok-button "$VAR_BT_Q" 0 0
+			FUNC_SOURCE_FILE
+		fi
+	elif [ $VAR_VLAN = 1 ]
+	then
+		editcap -C $VAR_BYTES -L ./$VAR_SOURCE_FILE ./novlantmp.pcap
+		if [ $? == 0 ]
+                then
+                        editcap --novlan ./novlantmp.pcap ./$VAR_DESTINATION_FILE
+			if [ $? = 0 ]
+			then
+				whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "First $VAR_BYTES bytes removed. New File: $VAR_DESTINATION_FILE" --ok-button "$VAR_BT_Q" 0 0
+                        	rm -f ./novlantmp.pcap
+				exit 0
+                	else
+				whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_ECE" --ok-button "$VAR_BT_Q" 0 0
+			fi
+		else
+                        whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_ECE" --ok-button "$VAR_BT_Q" 0 0
+                        FUNC_SOURCE_FILE
+                fi
 	else
-		whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_ECE" --ok-button "$VAR_BT_Q" 0 0
-		FUNC_SOURCE_FILE
+		:
 	fi
 else
 	whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_NI" --ok-button "$VAR_BT_Q" 0 0
 	exit 1
 fi
-
