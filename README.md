@@ -22,6 +22,8 @@ mygotov1.0.sh: how to use goto with shell scripts (main menu with submenus)
 
 myhashv1.0: calc file hash with md5 or sha
 
+mymp3v2.0.sh: youtube to mp3 (160kbitrate) via yt-dl
+
 mypingv1.2sh: ping with menu (options: size, dfbit, time, save to file, run in background)
 
 mysearchv1.0sh: find/search text inside files with tui menu (recursive directories) - show file name and line number only
