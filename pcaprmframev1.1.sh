@@ -129,7 +129,7 @@ then
 		editcap -C $VAR_BYTES -L ./$VAR_SOURCE_FILE ./novlantmp.pcap
 		if [ $? == 0 ]
                 then
-                        editcap --novlan ./novlantmp.pcap ./$VAR_DESTINATION_FILE
+                        editcap -L --novlan ./novlantmp.pcap ./$VAR_DESTINATION_FILE
 			if [ $? = 0 ]
 			then
 				whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "First $VAR_BYTES bytes removed. New File: $VAR_DESTINATION_FILE" --ok-button "$VAR_BT_Q" 0 0
