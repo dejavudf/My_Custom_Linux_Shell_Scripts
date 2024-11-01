@@ -1,5 +1,5 @@
 #!/bin/bash
-# mycreatevm script - create virtual machine using virtinstall
+# mycreatevm script - create virtual machine using virtinstall (goto style)
 # version 2.0 - build 28/10/2024
 # by dejavudf
 # tested and validated on debian/ubuntu/mint
