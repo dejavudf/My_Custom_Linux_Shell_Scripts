@@ -55,21 +55,21 @@ done
 }
 
 #func choose option vlan remove
-FUNC_REMOVE_VLAN() {
-until [ $VAR_VLAN_VALIDATION -eq 0 ]
+FUNC_REMOVE_DUPLICATE() {
+until [ $VAR_DUPLICATE_VALIDATION -eq 0 ]
 do
-        whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --yesno "Remove VLANs Tags?" "$1" 0 0 3>&2 2>&1 1>&3
+        whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --yesno "Remove duplicates?" "$1" 0 0 3>&2 2>&1 1>&3
 	if [ $? == 1 ]
         then
-                VAR_VLAN_VALIDATION=0
-		VAR_VLAN=0
+                VAR_DUPLICATE_VALIDATION=0
+		VAR_DUPLICATE=0
 		break
         elif [ $? == 255 ]
         then
-                VAR_VLAN_VALIDATION=1
+                VAR_DUPLICATE_VALIDATION=1
         else
-			VAR_VLAN=1
-			VAR_VLAN_VALIDATION=0
+			VAR_DUPLICATE=1
+			VAR_DUPLICATE_VALIDATION=0
         fi
 done
 }
