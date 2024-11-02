@@ -54,7 +54,7 @@ then
 else
 	case "$var_resposta" in
         	1)
-			if ./yt-dlp --ignore-errors -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' -o "%(title)s.%(ext)s" $var_link
+			if ./yt-dlp --ignore-errors -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' -o "%(title)s.%(ext)s" "$var_link"
 			then
 				echo "Sucesso!"
 				sleep 3
@@ -65,7 +65,7 @@ else
 				func_menu
 			fi;;
 		2)
-                	if ./yt-dlp --ignore-errors -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' -o "%(title)s.%(ext)s" --yes-playlist $var_link
+                	if ./yt-dlp --ignore-errors -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' -o "%(title)s.%(ext)s" --yes-playlist "$var_link"
 			then
                                 echo "Sucesso!"
                                 sleep 3
