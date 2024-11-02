@@ -20,8 +20,8 @@ echo "Baixandoyt-dlp. Por favor, aguarde..."
 if wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
 then
 	chmod u+x ./yt-dlp
+ 	rm -f ./yt-dlp.*
 	echo "Sucesso ao fazer download do yt-dlp."
-	rm -f ./yt-dlp.*
 else
 	echo "Erro ao tentar fazer download do yt-dlp."
 fi
