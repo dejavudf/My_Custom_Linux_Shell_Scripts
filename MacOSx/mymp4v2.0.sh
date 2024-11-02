@@ -1,5 +1,5 @@
 #!/bin/bash
-# MyMp3 Youtube Download to mp3 script by dejavudf
+# MyMp3 Youtube Download to mp4 script by dejavudf
 # version 2.0 - built 02/11/2024
 # MAC OS X
 
