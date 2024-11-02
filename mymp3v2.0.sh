@@ -8,6 +8,12 @@ var_resposta=""
 var_looping=1
 var_url="URL incorreta ou inválida. Tente novamente."
 
+#check if ffmpeg is installed
+if ! ffmpeg --help
+then
+	echo "ffmpeg não instalado."	
+else
+
 #download yt-dlp
 clear
 echo "Baixandoyt-dlp. Por favor, aguarde..."
@@ -120,3 +126,4 @@ fi
 
 #open principal menu
 func_menu
+fi
