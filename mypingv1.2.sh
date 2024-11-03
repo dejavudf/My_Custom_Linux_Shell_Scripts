@@ -4,7 +4,7 @@
 # tested and validated on debian/ubuntu/mint
 
 #var declare
-var_dt=$(date '+Date_%d_%m_%Y_Time_%H_%M_%S')
+var_dt="$(date '+Date_%d_%m_%Y_Time_%H_%M_%S')"
 var_destination=""
 var_destination_validation=0
 var_source=""
@@ -21,38 +21,38 @@ var_background="n"
 var_background_validation=0
 
 #Destination IP Menu - Get and Validate
-until [ $var_destination_validation -eq 1 ]
+until [ "$var_destination_validation" -eq 1 ]
 do
 	clear;
 	echo "### Myping Tool By Dejavudf ###";
 	echo "<CTRL + C> to quit";
 	echo "";
 	echo -n "Destination IP: ";
-	read var_destination;
-	if [[ $var_destination =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]
+	read -r var_destination;
+	if [[ "$var_destination" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]
 	then
-		if [ $(echo "$var_destination" | cut -d. -f1) -gt 223 ]
+		if [ "$(echo "$var_destination" | cut -d. -f1)" -gt 223 ]
         	then
                 	var_destination_validation=0;
-        	elif [ $(echo "$var_destination" | cut -d. -f2) -gt 255 ]
+        	elif [ "$(echo "$var_destination" | cut -d. -f2)" -gt 255 ]
         	then
                 	var_destination_validation=0;
-        	elif [ $(echo "$var_destination" | cut -d. -f3) -gt 255 ]
+        	elif [ "$(echo "$var_destination" | cut -d. -f3)" -gt 255 ]
         	then
                 	var_destination_validation=0;
-        	elif [ $(echo "$var_destination" | cut -d. -f4) -gt 255 ]
+        	elif [ "$(echo "$var_destination" | cut -d. -f4)" -gt 255 ]
         	then
                 	var_destination_validation=0;
         	else
                 	var_destination_validation=1;
         	fi
 	else
-  		var_destionation_validation=0;
+  		var_destination_validation=0;
 	fi
 done
 
 #Source IP Menu - Get and Validate
-until [ $var_source_validation -eq 1 ]
+until [ "$var_source_validation" -eq 1 ]
 do
         clear;
         echo "### Myping Tool By Dejavudf ###";
@@ -60,24 +60,23 @@ do
 	echo "";
 	echo "Destination IP: $var_destination";
 	echo -n "Source IP: ";
-        read var_source;
-	if [[ $var_source =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]
+        read -r var_source;
+	if [[ "$var_source" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]
         then
-                if [ $(echo "$var_source" | cut -d. -f1) -gt 223 ]
+                if [ "$(echo "$var_source" | cut -d. -f1)" -gt 223 ]
                 then
                        	var_source_validation=0;
-                elif [ $(echo "$var_source" | cut -d. -f2) -gt 255 ]
+                elif [ "$(echo "$var_source" | cut -d. -f2)" -gt 255 ]
                 then
                        	var_source_validation=0;
-               	elif [ $(echo "$var_source" | cut -d. -f3) -gt 255 ]
+               	elif [ "$(echo "$var_source" | cut -d. -f3)" -gt 255 ]
                	then
                        	var_source_validation=0;
-               	elif [ $(echo "$var_source" | cut -d. -f4) -gt 255 ]
+               	elif [ "$(echo "$var_source" | cut -d. -f4)" -gt 255 ]
                	then
                        	var_source_validation=0;
                	else
-                       	ip add show | grep -i "$var_source/";
-			if [ $? -eq 0 ]
+                       	if ip add show | grep -i "$var_source/"
 			then
 				var_source_validation=1;
 			else
@@ -92,7 +91,7 @@ do
 done
 
 #Count Menu - Get and Validate
-until [ $var_count_validation -eq 1 ]
+until [ "$var_count_validation" -eq 1 ]
 do
         clear;
         echo "### Myping Tool By Dejavudf ###";
@@ -101,10 +100,10 @@ do
 	echo "Destination IP: $var_destination";
         echo "Source IP: $var_source";
 	echo -n "Count: ";
-        read -n 5 var_count;
-        if [[ $var_count =~ ^[0-9]+$ ]]
+        read -r -n 5 var_count;
+        if [[ "$var_count" =~ ^[0-9]+$ ]]
         then
-		if [ $var_count -gt 65535 ] || [ $var_count -eq 0 ]
+		if [ "$var_count" -gt 65535 ] || [ "$var_count" -eq 0 ]
 		then
 			var_count_validation=0;
 		else
@@ -116,7 +115,7 @@ do
 done
 
 #Size Menu - Get and Validate
-until [ $var_size_validation -eq 1 ]
+until [ "$var_size_validation" -eq 1 ]
 do
         clear;
         echo "### Myping Tool By Dejavudf ###";
@@ -126,10 +125,10 @@ do
         echo "Source IP: $var_source";
         echo "Count: $var_count";
         echo -n "Size: ";
-	read -n 5 var_size;
-        if [[ $var_size =~ ^[0-9]+$ ]]
+	read -r -n 5 var_size;
+        if [[ "$var_size" =~ ^[0-9]+$ ]]
         then
-                if [ $var_size -gt 65535 ]
+                if [ "$var_size" -gt 65535 ]
                 then
                         var_size_validation=0;
                 else
@@ -141,7 +140,7 @@ do
 done
 
 #Defrag Bit - Get and Validate
-until [ $var_dfbit_validation -eq 1 ]
+until [ "$var_dfbit_validation" -eq 1 ]
 do
         clear;
         echo "### Myping Tool By Dejavudf ###";
@@ -152,7 +151,7 @@ do
         echo "Count: $var_count";
         echo "Size: $var_size";
         echo -n "Do not fragment (y/n)? ";
-	read var_dfbit;
+	read -r var_dfbit;
         if [ "$var_dfbit" == "y" ]
         then
         	var_dfbit_validation=1;
@@ -166,7 +165,7 @@ done
 
 
 #Save File Menu - Get and Validate
-until [ $var_save_validation -eq 1 ]
+until [ "$var_save_validation" -eq 1 ]
 do
         clear;
         echo "### Myping Tool By Dejavudf ###";
@@ -178,7 +177,7 @@ do
         echo "Size: $var_size";
         echo "Do not fragment: $var_dfbit";
 	echo -n "Save to file (y/n)? ";
-        read var_save;
+        read -r var_save;
         if [ "$var_save" == "y" ]
         then
                 var_save_validation=1;
@@ -193,7 +192,7 @@ done
 #Background Menu - Get and Validate
 if [ "$var_save" == "y" ]
 then
-	until [ $var_background_validation -eq 1 ]
+	until [ "$var_background_validation" -eq 1 ]
 	do
         	clear;
         	echo "### Myping Tool By Dejavudf ###";
@@ -207,7 +206,7 @@ then
         	echo "Save to file: $var_save ";
 		echo "File to be saved: $var_dt""_from_""$var_source""_to_""$var_destination"".txt"; 
 		echo -n "Run in Background? ";
-        	read var_background;
+        	read -r var_background;
         	if [ "$var_background" == "y" ]
         	then
                 	var_background_validation=1;
@@ -226,22 +225,22 @@ fi
 #Ping start
 if [  "$var_save" == "y" ] && [ "$var_dfbit" == "y" ] && [ "$var_background" == "n" ]
 then
-	ping -I $var_source -c $var_count -s $var_size -M do $var_destination -B -v | while read var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done | tee ./"$var_dt""_from_""$var_source""_to_""$var_destination"".txt"
+	ping -I "$var_source" -c "$var_count" -s "$var_size" -M "do" "$var_destination" -B -v | while read -r var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done | tee ./"$var_dt""_from_""$var_source""_to_""$var_destination"".txt"
 elif [  "$var_save" == "y" ] && [ "$var_dfbit" == "n" ] && [ "$var_background" == "n" ]
 then
-	ping -I $var_source -c $var_count -s $var_size $var_destination -B -v | while read var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done | tee ./"$var_dt""_from_""$var_source""_to_""$var_destination"".txt"
+	ping -I "$var_source" -c "$var_count" -s "$var_size" "$var_destination" -B -v | while read -r var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done | tee ./"$var_dt""_from_""$var_source""_to_""$var_destination"".txt"
 elif [  "$var_save" == "n" ] && [ "$var_dfbit" == "y" ] && [ "$var_background" == "n" ]
 then
-	ping -I $var_source -c $var_count -s $var_size -M do $var_destination -B -v | while read var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done
+	ping -I "$var_source" -c "$var_count" -s "$var_size" -M "do" "$var_destination" -B -v | while read -r var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done
 
 elif [  "$var_save" == "y" ] && [ "$var_background" == "y" ] && [ "$var_dfbit" == "y" ]
 then
-        nohup ping -I $var_source -c $var_count -s $var_size -M do $var_destination -B -v | while read var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done > ./"$var_dt""_from_""$var_source""_to_""$var_destination"".txt" &
+        nohup ping -I "$var_source" -c "$var_count" -s "$var_size" -M "do" "$var_destination" -B -v | while read -r var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done > ./"$var_dt""_from_""$var_source""_to_""$var_destination"".txt" &
 elif [  "$var_save" == "y" ] && [ "$var_background" == "y" ] && [ "$var_dfbit" == "n" ]
 then
-        nohup ping -I $var_source -c $var_count -s $var_size -M do $var_destination -B -v | while read var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done > ./"$var_dt""_from_""$var_source""_to_""$var_destination"".txt" &
+        nohup ping -I "$var_source" -c "$var_count" -s "$var_size" -M "do" "$var_destination" -B -v | while read -r var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done > ./"$var_dt""_from_""$var_source""_to_""$var_destination"".txt" &
 else
-	ping -I $var_source -c $var_count -s $var_size $var_destination -B -v | while read var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done
+	ping -I "$var_source" -c "$var_count" -s "$var_size $var_destination" -B -v | while read -r var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done
 fi
 
 #final check and print status
@@ -249,10 +248,10 @@ if [ "$var_background" == "y" ]
 then
 	echo "Ping running in background";
 	echo "Jobs (PID) info:";
-	echo "$(jobs -l)";
+	jobs -l;
 	echo "File been saved: $var_dt""_from_""$var_source""_to_""$var_destination"".txt";
 	echo "### Job added in $(date '+%d/%m/%Y - %H:%M:%S') ###" >> jobs.txt;
-        echo "$(jobs -l)" >> ./jobs.txt;
+        jobs -l >> ./jobs.txt;
 	echo "File being saved: $var_dt""_from_""$var_source""_to_""$var_destination"".txt" >> ./jobs.txt;
 elif [ "$var_save" == "y" ] && [ "$var_background" == "n" ]
 then
