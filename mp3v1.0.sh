@@ -4,8 +4,8 @@
 # tested and validated on debian/ubuntu/mint
 
 echo "Atualizando yt-dlp. Aguarde..."
-./yt-dlp --update-to nightly
-if [ $? -eq 0 ]
+
+if ./yt-dlp --update-to nightly
 then
 echo "Atualizado com sucesso."
 else
@@ -13,7 +13,7 @@ echo "Não foi possível atualizar."
 fi
 sleep 5
 var_looping=1
-until [ $var_looping -eq 0 ] 
+until [ "$var_looping" -eq 0 ]
 do
 clear
 echo "########################################################"
@@ -28,9 +28,9 @@ echo "1 - Download de Vídeo"
 echo "2 - Download de Playlist"
 echo "3 - Sair"
 echo -n "Opção: "
-read var_resposta
-	if [ $var_resposta -gt 3 ]
-	then 
+read -r var_resposta
+	if [ "$var_resposta" -gt 3 ]
+	then
 		var_looping=1
 	else
 		if ! [[ "$var_resposta" =~ ^[0-9]+$ ]]
@@ -42,22 +42,22 @@ read var_resposta
 	fi
 done
 
-if [ $var_resposta == 3 ]
+if [ "$var_resposta" == 3 ]
 then
 exit
 fi
 
-if [ $var_resposta == 1 ]
+if [ "$var_resposta" == 1 ]
 then
 echo -n "Digite o link do Vídeo: "
 else
 echo -n "Digite o link da Playlist:"
-fi 
+fi
 
-read var_link
-case $var_resposta in
-	1) ./yt-dlp --ignore-errors --format bestaudio --extract-audio --audio-format mp3 --audio-quality 160K --output "%(title)s.%(ext)s" $var_link;; 
-	2) ./yt-dlp --ignore-errors --format bestaudio --extract-audio --audio-format mp3 --audio-quality 160K --output "%(title)s.%(ext)s" --yes-playlist $var_link;;
+read -r var_link
+case "$var_resposta" in
+	1) ./yt-dlp --ignore-errors --format bestaudio --extract-audio --audio-format mp3 --audio-quality 160K --output "%(title)s.%(ext)s" "$var_link";;
+	2) ./yt-dlp --ignore-errors --format bestaudio --extract-audio --audio-format mp3 --audio-quality 160K --output "%(title)s.%(ext)s" --yes-playlist "$var_link";;
 esac
 exit 0
 
