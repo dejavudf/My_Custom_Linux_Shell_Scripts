@@ -10,7 +10,7 @@ var_file_name_validation=1
 var_sha_choice=1
 var_sha_choice_validation=1
 
-until [ $var_looping -eq 0 ]
+until [ "$var_looping" -eq 0 ]
 do
 	clear
 	echo "########################################################"
@@ -23,8 +23,8 @@ do
 	echo "2 - SHA"
 	echo "3 - Quit"
 	echo -n "Choice: "
-	read var_answer
-	if [ $var_answer -gt 3 ]
+	read -r var_answer
+	if [ "$var_answer" -gt 3 ]
 	then
 		var_looping=1
 	else
@@ -37,12 +37,12 @@ do
 	fi
 done
 
-if [ $var_answer == 3 ]
+if [ "$var_answer" == 3 ]
 then
 	exit
-elif [ $var_answer == 1 ]
+elif [ "$var_answer" == 1 ]
 then
-	while [ $var_file_name_validation != 0 ]
+	while [ "$var_file_name_validation" != 0 ]
 	do
 		clear
         	echo "########################################################"
@@ -54,12 +54,11 @@ then
         	echo "Calc hash using MD5."
 		echo ""
 		echo -n "Type file name or file mask: "
-		read var_file_name;
-		ls $var_file_name 2>/dev/null
-		if [ $? == 0 ]
+		read -r var_file_name;
+		if ls "$var_file_name" 2>/dev/null
 		then
 			echo "Hash:"
-			md5sum $var_file_name
+			md5sum "$var_file_name"
 			var_file_name_validation=0;
 		else
 			echo "File(s) not found. Try again"
@@ -67,9 +66,9 @@ then
 			sleep 2
 		fi
 	done
-elif [ $var_answer == 2 ]
+elif [ "$var_answer" == 2 ]
 then
-	while [ $var_file_name_validation != 0 ]
+	while [ "$var_file_name_validation" != 0 ]
 	do
 		clear
 		echo "########################################################"
@@ -80,12 +79,11 @@ then
 		echo ""
 		echo "Calc hash using SHA."
 		echo -n "Type file name or file mask: "
-		read var_file_name
-		ls $var_file_name 2>/dev/null
-		if [ $? == 0 ]
+		read -r var_file_name
+		if ls "$var_file_name" 2>/dev/null
 		then
 			var_file_name_validation=0
-			while [ $var_sha_choice_validation != 0 ]
+			while [ "$var_sha_choice_validation" != 0 ]
 			do
 				clear
                 		echo "########################################################"
@@ -97,10 +95,10 @@ then
                 		echo "Calc hash using SHA."
                 		echo "File name/mask: $var_file_name"
 				echo -n "Choose SHA algoritm (1, 224, 256, 384 or 512): "
-				read var_sha_choice
-				case $var_sha_choice in
+				read -r var_sha_choice
+				case "$var_sha_choice" in
 					1|224|256|384|512)
-						shasum -a $var_sha_choice $var_file_name
+						shasum -a "$var_sha_choice" "$var_file_name"
 						var_sha_choice_validation=0;;
 					*)
 						var_sha_choice_validation=1;;
