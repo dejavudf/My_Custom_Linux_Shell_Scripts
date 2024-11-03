@@ -11,7 +11,7 @@ export NEWT_COLORS='
 '
 
 #variables - whiptail usage
-VAR_BT_AQ="--ok-button Enter --cancel-button  Quit"
+VAR_BT_E="Enter"
 VAR_BT_C="Continue"
 VAR_BT_Q="Quit"
 VAR_T="Script to Remove First X Bytes from PCAP File"
@@ -29,9 +29,9 @@ FUNC_INVALID_INPUT() {
 
 #func remove bytes
 FUNC_REMOVE_BYTES() {
-until [ $VAR_BYTES_VALIDATION -eq 0 ]
+until [ "$VAR_BYTES_VALIDATION" -eq 0 ]
 do
-	VAR_BYTES=$(whiptail --clear $VAR_BT_AQ --title "$VAR_T" --backtitle "First Bytes to Remove -> Number (1 to 128)" --inputbox 'Bytes to Remove:' 0 0 3>&2 2>&1 1>&3)
+	VAR_BYTES=$(whiptail --clear --ok-button "$VAR_BT_E" --cancel-button "$VAR_BT_Q" --title "$VAR_T" --backtitle "First Bytes to Remove -> Number (1 to 128)" --inputbox 'Bytes to Remove:' 0 0 3>&2 2>&1 1>&3)
  	if [ $? == 1 ]
         then
                 exit
@@ -39,9 +39,9 @@ do
         then
                 VAR_BYTES_VALIDATION=1
 	else
-		if [[ $VAR_BYTES =~ ^[0-9]+$ ]]
+		if [[ "$VAR_BYTES" =~ ^[0-9]+$ ]]
 		then
-			if [[ $VAR_BYTES -le 128 ]] || [[ $VAR_BYTES -eq 0 ]]
+			if [[ "$VAR_BYTES" -le 128 ]] || [[ "$VAR_BYTES" -eq 0 ]]
 			then
 				VAR_BYTES_VALIDATION=0;
 			else
@@ -56,9 +56,9 @@ done
 
 #func choose option vlan remove
 FUNC_REMOVE_DUPLICATE() {
-until [ $VAR_DUPLICATE_VALIDATION -eq 0 ]
+until [ "$VAR_DUPLICATE_VALIDATION" -eq 0 ]
 do
-        whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --yesno "Remove duplicates?" "$1" 0 0 3>&2 2>&1 1>&3
+        whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --yesno "Remove duplicates?" 0 0 3>&2 2>&1 1>&3
 	if [ $? == 1 ]
         then
                 VAR_DUPLICATE_VALIDATION=0
@@ -78,10 +78,10 @@ done
 FUNC_SOURCE_FILE() {
 VAR_SOURCE_FILE=""
 VAR_SOURCE_FILE_VALIDATION=1
-until [ $VAR_SOURCE_FILE_VALIDATION == 0 ]
+until [ "$VAR_SOURCE_FILE_VALIDATION" == 0 ]
 do
         clear
-        VAR_SOURCE_FILE=$(whiptail --clear $VAR_BT_AQ --title "$VAR_T" --backtitle "Source PCAP File -> File Name and Path" --inputbox 'Source PCAP File:' 0 0 3>&2 2>&1 1>&3)
+        VAR_SOURCE_FILE=$(whiptail --clear --ok-button "$VAR_BT_E" --cancel-button "$VAR_BT_Q" --title "$VAR_T" --backtitle "Source PCAP File -> File Name and Path" --inputbox 'Source PCAP File:' 0 0 3>&2 2>&1 1>&3)
         if [ $? == 1 ]
         then
                	exit
@@ -90,7 +90,7 @@ do
               	VAR_SOURCE_FILE_VALIDATION=1
                 continue
         else
-                if [ -r $VAR_SOURCE_FILE ]
+                if [ -r "$VAR_SOURCE_FILE" ]
                 then
                        	VAR_SOURCE_FILE_VALIDATION=0
                 else
@@ -103,9 +103,11 @@ done
 
 # script begin
 #check if editcap is installed before proceed
-editcap 3>&2 2>&1 1>&3
-if [ $? == 1 ]
+if editcap 3>&2 2>&1 1>&3
 then
+	whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_NI" --ok-button "$VAR_BT_Q" 0 0
+        exit 1
+else
 	whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_WC" --ok-button "$VAR_BT_C" 0 0
 	FUNC_SOURCE_FILE
 	FUNC_REMOVE_BYTES
@@ -115,8 +117,7 @@ then
 	echo "Removing fist $VAR_BYTES bytes. Please, wait..."
 	if [ "$VAR_DUPLICATE" == "0" ]
 	then
-		editcap -C $VAR_BYTES -L ./$VAR_SOURCE_FILE ./$VAR_DESTINATION_FILE
-		if [ $? == 0 ]
+		if editcap -C "$VAR_BYTES" -L ./"$VAR_SOURCE_FILE" ./"$VAR_DESTINATION_FILE"
 		then
 			whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "First $VAR_BYTES bytes removed. New File: $VAR_DESTINATION_FILE" --ok-button "$VAR_BT_Q" 0 0
 			exit 0
@@ -126,11 +127,9 @@ then
 		fi
 	elif [ "$VAR_DUPLICATE" == "1" ]
 	then
-		editcap -C $VAR_BYTES -L ./$VAR_SOURCE_FILE ./novlantmp.pcap
-		if [ $? == 0 ]
+		if editcap -C "$VAR_BYTES" -L ./"$VAR_SOURCE_FILE" ./novlantmp.pcap
                 then
-                        editcap -d --novlan ./novlantmp.pcap ./$VAR_DESTINATION_FILE
-			if [ $? == 0 ]
+                        if editcap -d --novlan ./novlantmp.pcap ./"$VAR_DESTINATION_FILE"
 			then
 				whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "First $VAR_BYTES bytes removed. New File: $VAR_DESTINATION_FILE" --ok-button "$VAR_BT_Q" 0 0
                         	rm -f ./novlantmp.pcap
@@ -145,8 +144,5 @@ then
 	else
 		:
 	fi
-else
-	whiptail --clear --title "$VAR_T" --backtitle "$VAR_BKT" --msgbox "$VAR_MB_NI" --ok-button "$VAR_BT_Q" 0 0
-	exit 1
 fi
 
