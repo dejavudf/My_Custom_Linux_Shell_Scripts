@@ -240,7 +240,7 @@ elif [  "$var_save" == "y" ] && [ "$var_background" == "y" ] && [ "$var_dfbit" =
 then
         nohup ping -I "$var_source" -c "$var_count" -s "$var_size" -M "do" "$var_destination" -B -v | while read -r var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done > ./"$var_dt""_from_""$var_source""_to_""$var_destination"".txt" &
 else
-	ping -I "$var_source" -c "$var_count" -s "$var_size $var_destination" -B -v | while read -r var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done
+	ping -I "$var_source" -c "$var_count" -s "$var_size" "$var_destination" -B -v | while read -r var_pong; do echo "$(date '+%d/%m/%Y - %H:%M:%S') -> $var_pong"; done
 fi
 
 #final check and print status
