@@ -69,7 +69,7 @@ CHECK_WINNER()
 
 while [ $VAR_COUNT -lt 11 ]
 do
-	if [ $(($VAR_COUNT%2)) == 0 ]
+	if [ $((VAR_COUNT%2)) == 0 ]
 	then
 		VAR_PLAYER=2
 	else
@@ -107,21 +107,20 @@ do
 		fi
 		echo "Jogada $VAR_COUNT de 9"
 		echo -n "Jogador $VAR_PLAYER, escolha a posição: "
-        	read -n 1 VAR_PLAY
+        	read -r -n 1 VAR_PLAY
 		if [[ ! $VAR_PLAY =~ ^[1-9]+$ ]]
 		then
 			VAR_PLAY_VALIDATION=1
 		else
-			echo "$VAR_P1 $VAR_P2 $VAR_P3 $VAR_P4 $VAR_P5 $VAR_P6 $VAR_P7 $VAR_P8 $VAR_P9" | grep -i $VAR_PLAY 3>&2 2>&1 1>&3
-			if [ $? == 0 ]
+			if echo "$VAR_P1 $VAR_P2 $VAR_P3 $VAR_P4 $VAR_P5 $VAR_P6 $VAR_P7 $VAR_P8 $VAR_P9" | grep -i "$VAR_PLAY" 3>&2 2>&1 1>&3
 			then
 				if [ $VAR_PLAYER == 1 ]
 				then
-					eval VAR_P${VAR_PLAY}=X
+					eval VAR_P"${VAR_PLAY}"=X
 					VAR_PLAY_VALIDATION=0
 				elif [ $VAR_PLAYER == 2 ]
 				then
-					eval VAR_P${VAR_PLAY}=O
+					eval VAR_P"${VAR_PLAY}"=O
 					VAR_PLAY_VALIDATION=0
 				fi
 			else
