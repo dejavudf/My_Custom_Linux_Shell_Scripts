@@ -8,14 +8,14 @@ VAR_TEXT=""
 VAR_TEXT_VALIDATION=1
 
 #get text to search/find and show result
-until [ $VAR_TEXT_VALIDATION == 0 ]
+until [ "$VAR_TEXT_VALIDATION" == 0 ]
 do
 	clear
 	VAR_TEXT=$(whiptail --clear --title "Select Text to Search/Find" --backtitle "dejavudf@gmail.com - https://github.com/dejavudf/" --inputbox "Search/Find inside file(s):" 0 0 3>&2 2>&1 1>&3)
 	if [ $? == 1 ]
 	then
 		exit
-	elif [ -z $VAR_TEXT ]
+	elif [ -z "$VAR_TEXT" ]
 	then
 		VAR_TEXT_VALIDATION=1
 	else
