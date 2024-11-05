@@ -18,7 +18,7 @@ FUNC_CHECK
 
 #func copy files
 FUNC_COPY() {
-if scp -r ./* alexsandro@"$VAR_SERVER":/home/alexsandro/bck_pi2 >/dev/null 2>&1
+if scp -r ./* alexsandro@"$VAR_SERVER":/home/alexsandro/bck_pi2 >/dev/null 2>1&
 then
 	echo "Status: Backup completed successfuly."
 	sleep 2
