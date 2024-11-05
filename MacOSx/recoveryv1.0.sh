@@ -21,7 +21,7 @@ FUNC_BACKUP() {
 
 #script begin - check software
 clear
-if ./testdisk --help > /dev/null 2>1&
+if ./testdisk --help > /dev/null 2>&1
 then
 	until [ "$VAR_DISK_VALIDATION" == "0" ]
 	do
