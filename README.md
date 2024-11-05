@@ -38,6 +38,8 @@ pcaprmframev1.0.sh: script to remove first bytes from pcap file (remove underlay
 
 pcaprmframev1.1.sh: script to remove first bytes from pcap file (remove underlay encapsulation like VXLAN, GENEVE, MAC-in-MAC, QinQ, etcetera) 
 
+recoveryv1.0.sh: recovery deleted files via testdisk
+
 tic_toc_toe_jogo_velha_brv1.0.sh: tic toc toe game - jogo da velha no brasil
 
 whiptail_tui_menuv1.0.sh: learn to use whiptail with text user interface
