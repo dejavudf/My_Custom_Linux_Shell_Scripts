@@ -40,8 +40,8 @@ then
 			read -r VAR_CHOICE
 			if echo "$VAR_DISK_LIST" | grep -i "$VAR_CHOICE" > /dev/null 2>&1
 			then
-				VAR_DISK="$(echo $VAR_DISK_LIST | grep -i $VAR_CHOICE | awk '{print $1}')"
-				VAR_VOLUME="$(echo $VAR_DISK_LIST | grep -i $VAR_CHOICE | awk '{print $2}')"
+				VAR_DISK=$(echo "$VAR_DISK_LIST" | grep -i "$VAR_CHOICE" | awk '{print $1}')
+				VAR_VOLUME=$(echo "$VAR_DISK_LIST" | grep -i "$VAR_CHOICE" | awk '{print $2}')
 				if ! umount "$VAR_VOLUME"
 				then
 					echo "Please, umount disk before proceed."
