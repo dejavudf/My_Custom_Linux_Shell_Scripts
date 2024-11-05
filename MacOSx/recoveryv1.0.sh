@@ -9,14 +9,14 @@ VAR_DISK=""
 VAR_DISK_VALIDATION=1
 
 VAR_ROOT="$(whoami)"
-if [ ! $VAR_ROOT == "root" ]
+if [ ! "$VAR_ROOT" == "root" ]
 then
 	echo "Run this scripts as root or via sudo."
         exit 1
 fi
 
 FUNC_BACKUP() {
-./testdisk $VAR_DISK
+./testdisk "$VAR_DISK"
 }
 
 #script begin - check software
