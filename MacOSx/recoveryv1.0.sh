@@ -33,7 +33,7 @@ then
 		echo "External USB Device List:"
 		echo "Disk (/dev/)	Mount Point (/Volumes/)"
 		VAR_DISK_LIST="$(df -h | grep -i "/dev/disk" | awk '{print $1,$9}' | grep -iv "/System/Volumes" | grep -i "/Volumes")"
-		if [ ! -z "$VAR_DISK_LIST" ]
+		if [ -n "$VAR_DISK_LIST" ]
 		then
 			echo "$VAR_DISK_LIST"
 			echo -n "Choose mount point (/Volumes/): "
