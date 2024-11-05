@@ -10,7 +10,9 @@ VAR_FILE=""
 clear
 if [ -f ./gitlist.txt ] || [ ! -r ./gitlist.txt ]
 then
-        for VAR_FILE in $(cat < ./gitlist.txt)
+        #using for and using while (recommended)
+        cat < ./gitlist.txt | while read -r VAR_FILE
+        #for VAR_FILE in $(cat < ./gitlist.txt)
         do
                 echo "Downloading repository. Wait..."
                 if git clone https://github.com/dejavudf/"$VAR_FILE"
