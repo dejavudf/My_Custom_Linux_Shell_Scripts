@@ -1,6 +1,9 @@
 #!/bin/bash
 # by dejavudf
 # Github Repository Download and Compact (zip)
+# version 1.0 20240928
+# debian/ubunt/mint
+
 VAR_DT=$(date '+Date%d_%m_%Y_Hour%H_%M_%S')
 VAR_FILE=""
 
