@@ -21,7 +21,7 @@ FUNC_BACKUP() {
 
 #script begin - check software
 clear
-if ./testdisk-static --help > /dev/null 2>1&
+if ./testdisk_static --help > /dev/null 2>1&
 then
 	until [ "$VAR_DISK_VALIDATION" == "0" ]
 	do
@@ -33,7 +33,7 @@ then
 		echo "External USB Device List:"
 		echo "Disk (/dev/)	Mount Point (/media/)"
 		VAR_DISK_LIST="$(df -h | grep -i /dev/sd | awk '{print $1,$6}' | grep -i /media/ )"
-		if [ ! -z "$VAR_DISK_LIST" ]
+		if [ -n "$VAR_DISK_LIST" ]
 		then
 			echo "$VAR_DISK_LIST"
 			echo -n "Choose mount point (/media/): "
