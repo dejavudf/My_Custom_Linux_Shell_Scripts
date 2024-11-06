@@ -50,7 +50,7 @@ echo "Box Size: $VAR_R_SIZE (row) x $VAR_C_SIZE (col):"
 echo "${VAR_R// /$VAR_S}"
 while [ "$VAR_COUNT" -le "$VAR_C_SIZE" ]
 do
-	echo "#""$VAR_SPACE_SIZE""#"
+	echo "$VAR_S""$VAR_SPACE_SIZE""$VAR_S"
 	VAR_COUNT=$((VAR_COUNT + 1))
 done
 echo "${VAR_R// /$VAR_S}"
