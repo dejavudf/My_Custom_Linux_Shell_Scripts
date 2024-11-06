@@ -21,7 +21,7 @@ do
 	echo "####################################"
 	echo "# Make my box script - by dejavudf #"
 	echo "####################################"
-	echo "Choose box columm size:"
+	echo "Choose box column size:"
 	read -r VAR_C_SIZE
 	echo "Choose box row size:"
 	read -r VAR_R_SIZE
