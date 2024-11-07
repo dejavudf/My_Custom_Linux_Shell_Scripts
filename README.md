@@ -46,4 +46,6 @@ recoveryv1.0.sh: recovery deleted files via testdisk
 
 tic_toc_toe_jogo_velha_brv1.0.sh: tic toc toe game - jogo da velha no brasil
 
+tic_toc_toe_jogo_velha_brv1.1.sh: tic toc toe game - jogo da velha no brasil - using arrays
+
 whiptail_tui_menuv1.0.sh: learn to use whiptail with text user interface
