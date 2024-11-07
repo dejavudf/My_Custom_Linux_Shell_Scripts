@@ -22,7 +22,6 @@
 # 7 -> P2=P4=P6
 
 #variables
-#array positions: P1=0, P2=1, P3=2, P4=3, P5=4, P6=5, P7=6, P8=7 and P9=8
 VAR_GAME_ARRAY=(0 1 2 3 4 5 6 7 8)
 VAR_COUNT=1
 VAR_WINNER=0
