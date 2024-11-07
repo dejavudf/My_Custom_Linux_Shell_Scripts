@@ -11,7 +11,17 @@
 #----------------
 #| P7 | P8 | P9 |
 #----------------
+#possible winner combinations x 8
+# 1 -> P1=P2=P3
+# 2 -> P4=P5=P6
+# 3 -> P7=P8=P9
+# 4 -> P1=P4=P7
+# 5 -> P2=P5=P8
+# 6 -> P3=P6=P9
+# 7 -> P1=P5=P9
+# 8 -> P3=P5=P7
 
+#variables
 VAR_P1="1"
 VAR_P2="2"
 VAR_P3="3"
