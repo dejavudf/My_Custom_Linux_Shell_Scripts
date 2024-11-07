@@ -1,5 +1,7 @@
 ---> My Custom Linux Shell Scripts by dejavudf: clone, make it better and share with me
 
+automenuoptionsv1.0.sh: whiptail automenu to choose and open files (view) - whiptail menu itens = list of files from current directory 
+
 backup_gitbhub_repositoryv1.0.sh: backup repository txt list and compact all
 
 bckpi2v1.0.sh: backup pi2 (ubuntu) scripts to nas server (OMV) via scp
