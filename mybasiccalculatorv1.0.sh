@@ -121,7 +121,6 @@ done
 #func get calculation
 FUNC_GET_CALC() {
 VAR_TOTAL=$(echo | awk '{printf "%0.2f\n", ('$VAR_LEFT_VALUE' '$VAR_OPERATION' '$VAR_RIGHT_VALUE');}')
-#VAR_TOTAL=$(expr "$VAR_LEFT_VALUE" "$VAR_OPERATION" "$VAR_RIGHT_VALUE")
 VAR_STEP=4
 FUNC_SCREEN
 }
