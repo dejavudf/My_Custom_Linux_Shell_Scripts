@@ -24,6 +24,8 @@ mp3v1.0.sh: youtube to mp3 (160kbitrate) via yt-dl
 
 mp4v1.0.sh: youtube to mp4 (best video/audio quality) via yt-dl
 
+mybasiccalculatorv1.0.sh: basic calculator (integer and float numbers)
+
 myclockv1.0.sh: very simple clock simulator with sleep command
 
 mygotov1.0.sh: how to use goto with shell scripts (main menu with submenus)
