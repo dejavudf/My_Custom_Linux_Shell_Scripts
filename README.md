@@ -16,9 +16,9 @@ dialog_tui_menuv1.0.sh: learn to use dialog with text user interface
 
 eve_ng_backup_cisco_labs_configs_files.sh: backup cisco ios configs files from eve-ng labs
 
-maketextboxv1.1.sh: make text boxes
+maketextboxv1.1.sh: make square text boxes with one character
 
-maketextboxv1.0.sh: make text boxes
+maketextboxv1.0.sh: make square text boxes with one character
 
 mp3v1.0.sh: youtube to mp3 (160kbitrate) via yt-dl
 
