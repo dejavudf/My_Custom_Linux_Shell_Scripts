@@ -18,7 +18,7 @@ FUNC_CONVERT() {
 	FUNC_SCREEN
  	echo -n "Value to Convert: "
 	read VAR_VALUE
- 	if [[ "$value" =~ ^[0-9]+(\.[0-9]+)?$ ]]
+ 	if [[ "$VAR_VALUE" =~ ^[0-9]+(\.[0-9]+)?$ ]]
 	then
 		#DEC TO HEX
 		VAR_DEC_HEX=$(echo "obase=16; ibase=10; $VAR_VALUE" | bc)
