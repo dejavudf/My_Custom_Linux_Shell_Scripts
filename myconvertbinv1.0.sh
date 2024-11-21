@@ -23,30 +23,30 @@ FUNC_CONVERT() {
  	echo -n "Value to Convert: "
 	read VAR_VALUE
 	#DEC TO HEX
-	VAR_DEC_HEX=$(echo "obase=2; ibase=16; A" | bc)
+	VAR_DEC_HEX=$(echo "obase=16; ibase=10; $VAR_VALUE" | bc)
  	#echo "obase=16; 10" | bc
 	#DEC TO OCT
-	VAR_DEC_OCT=$(echo "obase=2; ibase=16; A" | bc)
+	VAR_DEC_OCT=$(echo "obase=8; ibase=10; $VAR_VALUE" | bc)
 	#DEC TO BIN
-	VAR_DEC_BIN=$(echo "obase=2; ibase=16; A" | bc)
+	VAR_DEC_BIN=$(echo "obase=2; ibase=10; $VAR_VALUE" | bc)
 	#BIN TO HEX
-	VAR_BIN_HEX=$(echo "obase=2; ibase=16; A" | bc)
+	VAR_BIN_HEX=$(echo "obase=16; ibase=2; $VAR_VALUE" | bc)
 	#BIN TO DEC
-	VAR_BIN_DEC=$(echo "obase=2; ibase=16; A" | bc)
+	VAR_BIN_DEC=$(echo "obase=10; ibase=2; $VAR_VALUE" | bc)
 	#BIN TO OCT
-	VAR_BIN_OCT=$(echo "obase=2; ibase=16; A" | bc)
+	VAR_BIN_OCT=$(echo "obase=8; ibase=2; $VAR_VALUE" | bc)
 	#HEX TO DEC
-	VAR_HEX_DEC=$(echo "obase=2; ibase=16; A" | bc)
+	VAR_HEX_DEC=$(echo "obase=10; ibase=16; $VAR_VALUE" | bc)
 	#HEX TO OCT
-	VAR_HEX_OCT=$(echo "obase=2; ibase=16; A" | bc)
+	VAR_HEX_OCT=$(echo "obase=8; ibase=16; $VAR_VALUE" | bc)
 	#HEX TO BIN
-	VAR_HEX_BIN=$(echo "obase=2; ibase=16; A" | bc)
+	VAR_HEX_BIN=$(echo "obase=2; ibase=16; $VAR_VALUE" | bc)
 	#OCT TO DEC
- 	VAR_OCT_DEC=$(echo "obase=10, ibase=8; 17" | bc)
+ 	VAR_OCT_DEC=$(echo "obase=10; ibase=8; $VAR_VALUE" | bc)
 	#OCT TO HEX
-        VAR_OCT_HEX=$(echo "obase=16; ibase=8; 17" | bc)
+        VAR_OCT_HEX=$(echo "obase=16; ibase=8; $VAR_VALUE" | bc)
 	#OCT TO BIN
- 	VAR_OCT_BIN=$(echo "obase=2; ibase=8; 17" | bc)
+ 	VAR_OCT_BIN=$(echo "obase=2; ibase=8; $VAR_VALUE" | bc)
  	FUNC_SCREEN
 	FUNC_RESULT
 }
