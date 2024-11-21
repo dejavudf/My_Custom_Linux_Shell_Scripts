@@ -24,6 +24,7 @@ FUNC_CONVERT() {
 	read VAR_VALUE
 	#DEC TO HEX
 	VAR_DEC_HEX=$(printf "%x\n" "$VAR_VALUE" 2> /dev/null)
+ 	#echo "obase=16; 10" | bc
 	#DEC TO OCT
 	VAR_DEC_OCT=$(printf "%o\n" "$VAR_VALUE" 2> /dev/null)
 	#DEC TO BIN
