@@ -30,6 +30,8 @@ mybasiccalculatorv1.0.sh: basic calculator (integer and float numbers)
 
 myclockv1.0.sh: very simple clock simulator with sleep command
 
+myconvertbinv1.0.sh: script to convert binary, octal, hexadecimal, decimal and vice versa using bc command
+
 mygotov1.0.sh: how to use goto with shell scripts (main menu with submenus)
 
 myhashv1.0: calc file hash with md5 or sha
