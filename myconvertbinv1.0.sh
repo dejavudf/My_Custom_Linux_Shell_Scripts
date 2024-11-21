@@ -27,24 +27,30 @@ FUNC_CONVERT() {
 		#DEC TO BIN
 		VAR_DEC_BIN=$(echo "obase=2; ibase=10; $VAR_VALUE" | bc)
 	fi
+	if [[ "$value" =~ ^[0-9]+(\.[0-9]+)?$ ]]
+	then
  	#BIN TO HEX
 	VAR_BIN_HEX=$(echo "obase=16; ibase=2; $VAR_VALUE" | bc)
 	#BIN TO DEC
 	VAR_BIN_DEC=$(echo "obase=10; ibase=2; $VAR_VALUE" | bc)
 	#BIN TO OCT
 	VAR_BIN_OCT=$(echo "obase=8; ibase=2; $VAR_VALUE" | bc)
-	#HEX TO DEC
-	VAR_HEX_DEC=$(echo "obase=10; ibase=16; $VAR_VALUE" | bc)
-	#HEX TO OCT
-	VAR_HEX_OCT=$(echo "obase=8; ibase=16; $VAR_VALUE" | bc)
-	#HEX TO BIN
-	VAR_HEX_BIN=$(echo "obase=2; ibase=16; $VAR_VALUE" | bc)
 	#OCT TO DEC
  	VAR_OCT_DEC=$(echo "obase=10; ibase=8; $VAR_VALUE" | bc)
 	#OCT TO HEX
         VAR_OCT_HEX=$(echo "obase=16; ibase=8; $VAR_VALUE" | bc)
 	#OCT TO BIN
  	VAR_OCT_BIN=$(echo "obase=2; ibase=8; $VAR_VALUE" | bc)
+ 	fi
+  	if [[ "$value" =~ ^[0-9]+(\.[0-9]+)?$ ]]
+	then
+	#HEX TO DEC
+	VAR_HEX_DEC=$(echo "obase=10; ibase=16; $VAR_VALUE" | bc)
+	#HEX TO OCT
+	VAR_HEX_OCT=$(echo "obase=8; ibase=16; $VAR_VALUE" | bc)
+	#HEX TO BIN
+	VAR_HEX_BIN=$(echo "obase=2; ibase=16; $VAR_VALUE" | bc)
+	fi
  	FUNC_SCREEN
 	FUNC_RESULT
 }
