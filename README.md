@@ -16,6 +16,8 @@ dialog_tui_menuv1.0.sh: learn to use dialog with text user interface
 
 eve_ng_backup_cisco_labs_configs_files.sh: backup cisco ios configs files from eve-ng labs
 
+getsubtitlev1.0.sh: Download subtitles script via subliminal
+
 maketextboxv1.0.sh: make square text boxes with one character
 
 maketextboxv1.1.sh: make square text boxes with one character
