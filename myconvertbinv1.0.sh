@@ -17,7 +17,7 @@ echo "###############################################"
 FUNC_CONVERT() {
 FUNC_SCREEN
 echo -n "Value to Convert: "
-read VAR_VALUE
+read -r VAR_VALUE
 if [[ "$VAR_VALUE" =~ ^[0-9]+$ ]]
 then
 	#DEC TO HEX
