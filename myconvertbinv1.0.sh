@@ -39,10 +39,13 @@ FUNC_CONVERT() {
 	#HEX TO OCT
 	VAR_HEX_OCT=$(printf "%o\n" 0x$VAR_VALUE 2> /dev/null)
 	#HEX TO BIN
-	#?
+	VAR_HEX_BIN=$(echo "obase=2; ibase=16; A" | bc)
 	#OCT TO DEC
+ 	VAR_OCT_BIN=$(echo "ibase=16; A" | bc)
 	#OCT TO HEX
+        VAR_OCT_HEX=$(echo "obase=2; ibase=8; 8" | bc)
 	#OCT TO BIN
+ 	VAR_OCT_BIN=$(
  	FUNC_SCREEN
 	FUNC_RESULT
 }
