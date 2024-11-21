@@ -24,7 +24,6 @@ FUNC_CONVERT() {
 	read VAR_VALUE
 	#DEC TO HEX
 	VAR_DEC_HEX=$(echo "obase=16; ibase=10; $VAR_VALUE" | bc)
- 	#echo "obase=16; 10" | bc
 	#DEC TO OCT
 	VAR_DEC_OCT=$(echo "obase=8; ibase=10; $VAR_VALUE" | bc)
 	#DEC TO BIN
@@ -54,26 +53,29 @@ FUNC_CONVERT() {
 FUNC_RESULT() {
 	echo -"Value to Convert: $VAR_VALUE"
  	#DEC TO HEX
-		echo "Decimal to Hexadecimal: $VAR_DEC_HEX"
+	echo "Decimal to Hexadecimal: $VAR_DEC_HEX"
 	#DEC TO OCT
-		echo "Decimal to Octal: $VAR_DEC_OCT"
+	echo "Decimal to Octal: $VAR_DEC_OCT"
 	#DEC TO BIN
-		echo "Decimal to Binary: $VAR_DEC_BIN"
+	echo "Decimal to Binary: $VAR_DEC_BIN"
 	#BIN TO HEX
-		echo "Binary to Hexadecimal: $VAR_BIN_HEX"
+	echo "Binary to Hexadecimal: $VAR_BIN_HEX"
 	#BIN TO DEC
-		echo "Binary to Decimal: $VAR_BIN_DEC"
+	echo "Binary to Decimal: $VAR_BIN_DEC"
 	#BIN TO OCT
-		echo "Binalry to Octal: $VAR_BIN_OCT"
+	echo "Binalry to Octal: $VAR_BIN_OCT"
 	#HEX TO DEC
-		echo "Hexadecimal to Decimal: $VAR_HEX_DEC"
+	echo "Hexadecimal to Decimal: $VAR_HEX_DEC"
 	#HEX TO OCT
-		echo "Hexadecimal to Octal: $VAR_HEX_OCT"
+	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
 	#HEX TO BIN
-	#?
+ 	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
 	#OCT TO DEC
+ 	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
 	#OCT TO HEX
+ 	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
 	#OCT TO BIN
+ 	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
 }
 
 FUNC_CONVERT
