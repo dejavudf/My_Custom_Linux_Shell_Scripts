@@ -3,7 +3,7 @@
 # version 1.0 - built 20241121
 # Debian/Ubuntu/Mint
 
-FUNC_MAIN_MENU() {
+FUNC_SCRENN() {
 VAR_LOOPING=1
 until [ "$VAR_LOOPING" -eq 0 ]
 do
@@ -15,7 +15,12 @@ do
 	echo "###############################################"
 	echo "# Pres CTRL + C to Quit                       #"
 	echo "###############################################"
-	echo -n "Value to Convert: "
+done
+}
+
+FUNC_CONVERT() {
+	FUNC_SCREEN
+ 	echo -n "Value to Convert: "
 	read VAR_VALUE
 	#DEC TO HEX
 	VAR_DEC_HEX=$(printf "%x\n" "$VAR_VALUE" 2> /dev/null)
@@ -47,7 +52,6 @@ do
 	#OCT TO HEX
 	#OCT TO BIN
 	sleep 10000
-done
 }
 
-FUNC_MAIN_MENU
+FUNC_CONVERT
