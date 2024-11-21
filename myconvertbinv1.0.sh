@@ -42,7 +42,7 @@ FUNC_CONVERT() {
 	#HEX TO BIN
 	VAR_HEX_BIN=$(echo "obase=2; ibase=16; A" | bc)
 	#OCT TO DEC
- 	VAR_OCT_DEC=$(echo "ibase=8; 17" | bc)
+ 	VAR_OCT_DEC=$(echo "obase=10, ibase=8; 17" | bc)
 	#OCT TO HEX
         VAR_OCT_HEX=$(echo "obase=16; ibase=8; 17" | bc)
 	#OCT TO BIN
