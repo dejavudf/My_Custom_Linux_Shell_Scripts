@@ -3,7 +3,7 @@
 # version 1.0 - built 20241121
 # Debian/Ubuntu/Mint
 
-FUNC_SCRENN() {
+FUNC_SCREEN() {
 VAR_LOOPING=1
 until [ "$VAR_LOOPING" -eq 0 ]
 do
@@ -48,7 +48,8 @@ FUNC_CONVERT() {
 }
 
 FUNC_RESULT() {
-#DEC TO HEX
+	echo -"Value to Convert: $VAR_VALUE"
+ 	#DEC TO HEX
 		echo "Decimal to Hexadecimal: $VAR_DEC_HEX"
 	#DEC TO OCT
 		echo "Decimal to Octal: $VAR_DEC_OCT"
