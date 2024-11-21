@@ -23,22 +23,22 @@ FUNC_CONVERT() {
  	echo -n "Value to Convert: "
 	read VAR_VALUE
 	#DEC TO HEX
-	VAR_DEC_HEX=$(printf "%x\n" "$VAR_VALUE" 2> /dev/null)
+	VAR_DEC_HEX=$(echo "obase=2; ibase=16; A" | bc)
  	#echo "obase=16; 10" | bc
 	#DEC TO OCT
-	VAR_DEC_OCT=$(printf "%o\n" "$VAR_VALUE" 2> /dev/null)
+	VAR_DEC_OCT=$(echo "obase=2; ibase=16; A" | bc)
 	#DEC TO BIN
-	VAR_DEC_BIN=$(echo "obase=2;$VAR_VALUE" | bc 2> /dev/null)
+	VAR_DEC_BIN=$(echo "obase=2; ibase=16; A" | bc)
 	#BIN TO HEX
-	VAR_BIN_HEX=$(printf "%x\n" $((2#$VAR_VALUE)) 2> /dev/null)
+	VAR_BIN_HEX=$(echo "obase=2; ibase=16; A" | bc)
 	#BIN TO DEC
-	VAR_BIN_DEC=$(printf "%d\n" $((2#$VAR_VALUE)) 2> /dev/null)
+	VAR_BIN_DEC=$(echo "obase=2; ibase=16; A" | bc)
 	#BIN TO OCT
-	VAR_BIN_OCT=$(printf "%o\n" $((2#$VAR_VALUE)) 2> /dev/null)
+	VAR_BIN_OCT=$(echo "obase=2; ibase=16; A" | bc)
 	#HEX TO DEC
-	VAR_HEX_DEC=$(printf "%d\n" 0x$VAR_VALUE 2> /dev/null)
+	VAR_HEX_DEC=$(echo "obase=2; ibase=16; A" | bc)
 	#HEX TO OCT
-	VAR_HEX_OCT=$(printf "%o\n" 0x$VAR_VALUE 2> /dev/null)
+	VAR_HEX_OCT=$(echo "obase=2; ibase=16; A" | bc)
 	#HEX TO BIN
 	VAR_HEX_BIN=$(echo "obase=2; ibase=16; A" | bc)
 	#OCT TO DEC
