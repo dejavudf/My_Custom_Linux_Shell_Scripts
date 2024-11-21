@@ -71,11 +71,11 @@ FUNC_RESULT() {
 	#HEX TO BIN
  	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
 	#OCT TO DEC
- 	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
+ 	echo "Octal to Decimal: $VAR_OCT_DEC"
 	#OCT TO HEX
- 	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
+ 	echo "Octal to Hexadecimal: $VAR_OCT_HEX"
 	#OCT TO BIN
- 	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
+ 	echo "Octal Binary: $VAR_OCT_BIN"
 }
 
 FUNC_CONVERT
