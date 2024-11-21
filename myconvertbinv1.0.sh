@@ -4,18 +4,14 @@
 # Debian/Ubuntu/Mint
 
 FUNC_SCREEN() {
-VAR_LOOPING=1
-until [ "$VAR_LOOPING" -eq 0 ]
-do
-	clear
-	echo "###############################################"
-	echo "# Convert bin to dec, hex, oct and vice versa # "
-	echo "# by dejavudf - Version 1.0                   #"
-	echo "# Site: https://github.com/dejavudf           #"
-	echo "###############################################"
-	echo "# Pres CTRL + C to Quit                       #"
-	echo "###############################################"
-done
+clear
+echo "###############################################"
+echo "# Convert bin to dec, hex, oct and vice versa # "
+echo "# by dejavudf - Version 1.0                   #"
+echo "# Site: https://github.com/dejavudf           #"
+echo "###############################################"
+echo "# Pres CTRL + C to Quit                       #"
+echo "###############################################"
 }
 
 FUNC_CONVERT() {
@@ -51,7 +47,7 @@ FUNC_CONVERT() {
 }
 
 FUNC_RESULT() {
-	echo -"Value to Convert: $VAR_VALUE"
+	echo "Value to Convert: $VAR_VALUE"
  	#DEC TO HEX
 	echo "Decimal to Hexadecimal: $VAR_DEC_HEX"
 	#DEC TO OCT
@@ -76,6 +72,8 @@ FUNC_RESULT() {
  	echo "Octal to Hexadecimal: $VAR_OCT_HEX"
 	#OCT TO BIN
  	echo "Octal to Binary: $VAR_OCT_BIN"
+  	sleep 40
+  	FUNC_CONVERT
 }
 
 FUNC_CONVERT
