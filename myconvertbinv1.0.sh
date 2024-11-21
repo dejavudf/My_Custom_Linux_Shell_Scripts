@@ -18,13 +18,16 @@ FUNC_CONVERT() {
 	FUNC_SCREEN
  	echo -n "Value to Convert: "
 	read VAR_VALUE
-	#DEC TO HEX
-	VAR_DEC_HEX=$(echo "obase=16; ibase=10; $VAR_VALUE" | bc)
-	#DEC TO OCT
-	VAR_DEC_OCT=$(echo "obase=8; ibase=10; $VAR_VALUE" | bc)
-	#DEC TO BIN
-	VAR_DEC_BIN=$(echo "obase=2; ibase=10; $VAR_VALUE" | bc)
-	#BIN TO HEX
+ 	if [[ "$value" =~ ^[0-9]+(\.[0-9]+)?$ ]]
+	then
+		#DEC TO HEX
+		VAR_DEC_HEX=$(echo "obase=16; ibase=10; $VAR_VALUE" | bc)
+		#DEC TO OCT
+		VAR_DEC_OCT=$(echo "obase=8; ibase=10; $VAR_VALUE" | bc)
+		#DEC TO BIN
+		VAR_DEC_BIN=$(echo "obase=2; ibase=10; $VAR_VALUE" | bc)
+	fi
+ 	#BIN TO HEX
 	VAR_BIN_HEX=$(echo "obase=16; ibase=2; $VAR_VALUE" | bc)
 	#BIN TO DEC
 	VAR_BIN_DEC=$(echo "obase=10; ibase=2; $VAR_VALUE" | bc)
