@@ -15,44 +15,48 @@ echo "###############################################"
 }
 
 FUNC_CONVERT() {
-	FUNC_SCREEN
- 	echo -n "Value to Convert: "
-	read VAR_VALUE
- 	if [[ "$VAR_VALUE" =~ ^[0-9]+(\.[0-9]+)?$ ]]
-	then
-		#DEC TO HEX
-		VAR_DEC_HEX=$(echo "obase=16; ibase=10; $VAR_VALUE" | bc)
-		#DEC TO OCT
-		VAR_DEC_OCT=$(echo "obase=8; ibase=10; $VAR_VALUE" | bc)
-		#DEC TO BIN
-		VAR_DEC_BIN=$(echo "obase=2; ibase=10; $VAR_VALUE" | bc)
-	fi
-	if [[ "$value" =~ ^[0-9]+(\.[0-9]+)?$ ]]
-	then
- 	#BIN TO HEX
+FUNC_SCREEN
+echo -n "Value to Convert: "
+read VAR_VALUE
+if [[ "$VAR_VALUE" =~ ^[0-9]+$ ]]
+then
+	#DEC TO HEX
+	VAR_DEC_HEX=$(echo "obase=16; ibase=10; $VAR_VALUE" | bc)
+	#DEC TO OCT
+	VAR_DEC_OCT=$(echo "obase=8; ibase=10; $VAR_VALUE" | bc)
+	#DEC TO BIN
+	VAR_DEC_BIN=$(echo "obase=2; ibase=10; $VAR_VALUE" | bc)
+fi
+if [[ "$VAR_VALUE" =~ ^[0-1]+$ ]]
+then
+	#BIN TO HEX
 	VAR_BIN_HEX=$(echo "obase=16; ibase=2; $VAR_VALUE" | bc)
 	#BIN TO DEC
 	VAR_BIN_DEC=$(echo "obase=10; ibase=2; $VAR_VALUE" | bc)
 	#BIN TO OCT
 	VAR_BIN_OCT=$(echo "obase=8; ibase=2; $VAR_VALUE" | bc)
+fi
+if [[ "$VAR_VALUE" =~ ^[0-9]+$ ]] && [ "$VAR_VALUE" -le 7 ]
+then
 	#OCT TO DEC
  	VAR_OCT_DEC=$(echo "obase=10; ibase=8; $VAR_VALUE" | bc)
 	#OCT TO HEX
         VAR_OCT_HEX=$(echo "obase=16; ibase=8; $VAR_VALUE" | bc)
 	#OCT TO BIN
  	VAR_OCT_BIN=$(echo "obase=2; ibase=8; $VAR_VALUE" | bc)
- 	fi
-  	if [[ "$value" =~ ^[0-9]+(\.[0-9]+)?$ ]]
-	then
+fi
+if (( 16#"$VAR_VALUE" ))
+then
 	#HEX TO DEC
+	VAR_VALUE=$(echo "$VAR_VALUE" | tr '[:lower:]' '[:upper:]')
 	VAR_HEX_DEC=$(echo "obase=10; ibase=16; $VAR_VALUE" | bc)
 	#HEX TO OCT
 	VAR_HEX_OCT=$(echo "obase=8; ibase=16; $VAR_VALUE" | bc)
 	#HEX TO BIN
 	VAR_HEX_BIN=$(echo "obase=2; ibase=16; $VAR_VALUE" | bc)
-	fi
- 	FUNC_SCREEN
-	FUNC_RESULT
+fi
+FUNC_SCREEN
+FUNC_RESULT
 }
 
 FUNC_RESULT() {
@@ -68,13 +72,13 @@ FUNC_RESULT() {
 	#BIN TO DEC
 	echo "Binary to Decimal: $VAR_BIN_DEC"
 	#BIN TO OCT
-	echo "Binalry to Octal: $VAR_BIN_OCT"
+	echo "Binary to Octal: $VAR_BIN_OCT"
 	#HEX TO DEC
 	echo "Hexadecimal to Decimal: $VAR_HEX_DEC"
 	#HEX TO OCT
 	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
 	#HEX TO BIN
- 	echo "Hexadecimal to Octal: $VAR_HEX_OCT"
+ 	echo "Hexadecimal to Binary: $VAR_HEX_BIN"
 	#OCT TO DEC
  	echo "Octal to Decimal: $VAR_OCT_DEC"
 	#OCT TO HEX
@@ -85,4 +89,12 @@ FUNC_RESULT() {
   	FUNC_CONVERT
 }
 
-FUNC_CONVERT
+#script begin
+if bc --help 2>/dev/null
+then
+	FUNC_CONVERT
+else
+	echo "bc is not installed. Please install via command: apt-get install bc"
+	sleep 10
+	exit 1
+fi
