@@ -86,7 +86,7 @@ do
 	clear
 	echo "Starting subtible download. Please. wait."
 	echo "Target Video: $VAR_FILE"
-	subliminal --opensubtitles 'dejavudf@gmail.com' 'Ab123456!#2o22' download -l "$VAR_LANG" "$VAR_FILE" | tee -a ./"$VAR_DATE"_"$VAR_RUN"_subtitlelog.txt
+	subliminal --opensubtitles 'test@gmail.com' 'testpassword' download -l "$VAR_LANG" "$VAR_FILE" | tee -a ./"$VAR_DATE"_"$VAR_RUN"_subtitlelog.txt
 done
 FUNC_MAIN_MENU
 }
