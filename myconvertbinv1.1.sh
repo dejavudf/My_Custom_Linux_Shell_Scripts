@@ -3,6 +3,26 @@
 # version 1.1 - built 20241122
 # Debian/Ubuntu/Mint
 
+#variables
+VAR_VALUE=""
+VAR_DEC_HEX=""
+VAR_DEC_OCT=""
+VAR_DEC_BIN=""
+VAR_BIN_HEX=""
+VAR_BIN_DEC=""
+VAR_BIN_OCT=""
+VAR_HEX_DEC=""
+VAR_HEX_OCT=""
+VAR_HEX_BIN=""
+VAR_OCT_DEC=""
+VAR_OCT_HEX=""
+VAR_OCT_BIN=""
+VAR_HEX_VALUE=""
+VAR_BASE=""
+VAR_RESULT=""
+VAR_HEX_VALUE=""
+VAR_COUNT=""
+
 FUNC_SCREEN() {
 clear
 echo "###############################################"
