@@ -36,7 +36,7 @@ then
 	#BIN TO OCT
 	VAR_BIN_OCT=$(echo "obase=8; ibase=2; $VAR_VALUE" | bc)
 fi
-if [[ "$VAR_VALUE" =~ ^[0-9]+$ ]] && [ "$VAR_VALUE" -le 7 ]
+if [[ "$VAR_VALUE" =~ ^[0-7]+$ ]] && [ "$VAR_VALUE" -le 7 ]
 then
 	#OCT TO DEC
  	VAR_OCT_DEC=$(echo "obase=10; ibase=8; $VAR_VALUE" | bc)
