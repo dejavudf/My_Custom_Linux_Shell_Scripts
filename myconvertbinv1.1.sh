@@ -41,18 +41,25 @@ read -r VAR_VALUE
 if [[ "$VAR_VALUE" =~ ^[0-9]+$ ]]
 then
 	#DEC TO HEX
-	VAR_DEC_HEX=$(printf "%x\n" "$VAR_VALUE")
+	VAR_DEC_HEX=$(printf "%x\n" "$VAR_VALUE" | tr '[:lower:]' '[:upper:]')
 	#DEC TO OCT
 	VAR_DEC_OCT=$(printf "%o\n" "$VAR_VALUE")
 	#DEC TO BIN
-   	VAR_HEX_VALUE="$VAR_VALUE"
-	VAR_BASE=2
-	while [ "$VAR_HEX_VALUE" -ne 0 ]
+	VAR_VALUE_NUM="$VAR_VALUE"
+	VAR_OP=2
+	VAR_QUO=$(( "$VAR_VALUE_NUM" / "$VAR_OP" ))
+	VAR_REM=$(( "$VAR_VALUE_NUM" % "$VAR_OP"))
+	array=()
+    	array+=("$VAR_REM")
+        until [[ "$VAR_QUO" -eq 0 ]]
 	do
-        	VAR_RESULT=$(( "$VAR_HEX_VALUE" % "$VAR_BASE" ))"$VAR_RESULT"
-        	VAR_HEX_VALUE=$(( "$VAR_HEX_VALUE" / "$VAR_BASE" ))
-   	done
-   	VAR_DEC_BIN=$(echo -n "$VAR_RESULT")
+		VAR_VALUE_NUM="$VAR_QUO"
+		VAR_QUO=$(( "$VAR_VALUE_NUM" / "$VAR_OP"))
+		VAR_REM=$(( "$VAR_VALUE_NUM" % "$VAR_OP"))
+        	array+="$VAR_REM"
+        done
+    	VAR_BIN=$(echo "${array[@]}" | rev)
+    	VAR_DEC_BIN=$(printf "$VAR_BIN\n")
 fi
 if [[ "$VAR_VALUE" =~ ^[0-1]+$ ]]
 then
@@ -67,10 +74,27 @@ if [[ "$VAR_VALUE" =~ ^[0-7]+$ ]]
 then
 	#OCT TO DEC
  	VAR_OCT_DEC=$(echo "$((8#$VAR_VALUE))")
-	#OCT TO HEX
-        VAR_OCT_HEX=$()
-	#OCT TO BIN
- 	VAR_OCT_BIN=$()
+	#OCT TO HEX (OCT TO DEC TO HEX)
+        VAR_OCT_HEX=$(echo "$((8#$VAR_VALUE))")
+	VAR_OCT_HEX=$(printf "%x\n" "$VAR_OCT_HEX" | tr '[:lower:]' '[:upper:]')
+	#OCT TO BIN (OCT TO DEC TO BIN)
+ 	VAR_OCT_BIN=$(echo "$((8#$VAR_VALUE))")
+	VAR_VALUE_NUM="$VAR_OCT_BIN"
+        VAR_OP=2
+        VAR_QUO=$(( "$VAR_VALUE_NUM" / "$VAR_OP" ))
+        VAR_REM=$(( "$VAR_VALUE_NUM" % "$VAR_OP"))
+        array=()
+        array+=("$VAR_REM")
+        until [[ "$VAR_QUO" -eq 0 ]]
+        do
+                VAR_VALUE_NUM="$VAR_QUO"
+                VAR_QUO=$(( "$VAR_VALUE_NUM" / "$VAR_OP"))
+                VAR_REM=$(( "$VAR_VALUE_NUM" % "$VAR_OP"))
+                array+="$VAR_REM"
+        done
+        VAR_BIN=$(echo "${array[@]}" | rev)
+        VAR_OCT_BIN=$(printf "$VAR_BIN\n")
+
 fi
 if (( 16#"$VAR_VALUE" ))
 then
