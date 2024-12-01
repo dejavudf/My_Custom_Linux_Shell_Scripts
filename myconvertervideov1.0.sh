@@ -78,7 +78,7 @@ do
 		VAR_SOURCE_RESOLUTION=$(cat < /tmp/ffmpeg.tmp | grep Video | awk -F"," '{print $4}' | awk '{print $1}')
 		VAR_SOURCE_AUDIO=$(cat < /tmp/ffmpeg.tmp | grep Audio | awk -F"," '{print $1}' | awk '{print $4}')
 		VAR_SOURCE_FORMAT=$(cat < /tmp/ffmpeg.tmp | grep Input | awk -F"," '{print $2}')
-		VAR_SOURCE_FORMAT=$(echo "${VAR_SOURCE_FORMAT//[[:blank:]]/}")
+		VAR_SOURCE_FORMAT="${VAR_SOURCE_FORMAT//[[:blank:]]/}"
 		VAR_SOURCE_FILE_VALIDATION=0
 	else
 		echo "Error: wrong file name ou file name with invalid characteres. Please, try again."
@@ -153,7 +153,7 @@ do
 	read -r -n 1 VAR_DESTINATION_RESOLUTION
 	if [ "$VAR_DESTINATION_RESOLUTION" == "3" ]
 	then
-		VAR_DESTINATION_RESOLUTION_SCALE=$(echo "$VAR_SOURCE_RESOLUTION" | sed 's/x/:/g')
+		VAR_DESTINATION_RESOLUTION_SCALE="${VAR_SOURCE_RESOLUTION//x/:}"
 		VAR_DESTINATION_RESOLUTION="$VAR_SOURCE_RESOLUTION"
 		VAR_DESTINATION_RESOLUTION="none"
 		VAR_DESTINATION_RESOLUTION_VALIDATION=0
@@ -183,7 +183,7 @@ do
 	echo -n "  Destination File name: "
 	read -r VAR_DESTINATION_FILE
 	echo "Validating destination file name. Please, wait..."
-	VAR_DESTINATION_FILE_SIZE=$(echo "${#VAR_DESTINATION_FILE}")
+	VAR_DESTINATION_FILE_SIZE="${#VAR_DESTINATION_FILE}"
 	if [[ "$VAR_DESTINATION_FILE" =~ ^[0-9a-zA-Z_-]+$ ]] && [ "$VAR_DESTINATION_FILE_SIZE" -lt 255 ]
 	then
 		VAR_DESTINATION_FILE_VALIDATION=0
