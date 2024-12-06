@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-SLEEP_DURATION=${SLEEP_DURATION:=1}  # default to 1 second, use to speed up tests
+VAR_SLEEP_TIME=${VAR_SLEEP_TIME:=1}  # default to 1 second, use to speed up tests
 
-progress-bar() {
+FUNC_PROGRESS_BAR() {
   local duration
   local columns
   local space_available
@@ -34,7 +34,9 @@ progress-bar() {
   percentage() { 
   printf "| %s%%" $(( ((elapsed)*100)/(duration)*100/100 ));
   }
-  clean_line() { printf "\r"; }
+  clean_line() { 
+  printf "\r";
+  }
 
   for (( elapsed=1; elapsed<=duration; elapsed=elapsed+1 )); 
   do
