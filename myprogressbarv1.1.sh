@@ -21,12 +21,23 @@ progress-bar() {
     fit_to_screen=$((fit_to_screen+1)); 
   fi
 
-  already_done() { for ((done=0; done<(elapsed / fit_to_screen) ; done=done+1 )); do printf "▇"; done }
-  remaining() { for (( remain=(elapsed/fit_to_screen) ; remain<(duration/fit_to_screen) ; remain=remain+1 )); do printf " "; done }
-  percentage() { printf "| %s%%" $(( ((elapsed)*100)/(duration)*100/100 )); }
+  already_done() { 
+  for ((done=0; done<(elapsed / fit_to_screen) ; done=done+1 )); 
+  do printf "▇"; 
+  done
+  }
+  remaining() { 
+  for (( remain=(elapsed/fit_to_screen) ; remain<(duration/fit_to_screen) ; remain=remain+1 )); 
+  do printf " "; 
+  done
+  }
+  percentage() { 
+  printf "| %s%%" $(( ((elapsed)*100)/(duration)*100/100 ));
+  }
   clean_line() { printf "\r"; }
 
-  for (( elapsed=1; elapsed<=duration; elapsed=elapsed+1 )); do
+  for (( elapsed=1; elapsed<=duration; elapsed=elapsed+1 )); 
+  do
       already_done; remaining; percentage
       sleep "$SLEEP_DURATION"
       clean_line
