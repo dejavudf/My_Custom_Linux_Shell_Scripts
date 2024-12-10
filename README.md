@@ -54,7 +54,7 @@ pcaprmframev1.0.sh: script to remove first bytes from pcap file (remove underlay
 
 pcaprmframev1.1.sh: script to remove first bytes from pcap file (remove underlay encapsulation like VXLAN, GENEVE, MAC-in-MAC, QinQ, etcetera) 
 
-progress-bar.sh: script to create a progress bar
+myprogress-barv1.0.sh: script to create a progress bar
 
 recoveryv1.0.sh: recovery deleted files via testdisk
 
