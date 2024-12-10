@@ -46,6 +46,8 @@ mymp4v2.0.sh: youtube to mp4 (best quality video and audio) via yt-dl
 
 mypingv1.2sh: ping with menu (options: size, dfbit, time, save to file, run in background)
 
+myprogress-barv1.0.sh: script to create a progress bar
+
 mysearchv1.0sh: find/search text inside files with tui menu (recursive directories) - show file name and line number only
 
 mysearchv2.0sh: find/search text inside files with tui menu (recursive directories) - show file by file (full text)
@@ -53,8 +55,6 @@ mysearchv2.0sh: find/search text inside files with tui menu (recursive directori
 pcaprmframev1.0.sh: script to remove first bytes from pcap file (remove underlay encapsulation like VXLAN, GENEVE, MAC-in-MAC, QinQ, etcetera) 
 
 pcaprmframev1.1.sh: script to remove first bytes from pcap file (remove underlay encapsulation like VXLAN, GENEVE, MAC-in-MAC, QinQ, etcetera) 
-
-myprogress-barv1.0.sh: script to create a progress bar
 
 recoveryv1.0.sh: recovery deleted files via testdisk
 
