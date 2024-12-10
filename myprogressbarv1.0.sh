@@ -4,7 +4,7 @@
 #debian/ubuntu/mint
 
 #variables
-#parameter input user time var in seconds
+#parameter input user time var in seconds - min value 50
 VAR_USER_TIME="$1"
 VAR_PERCENT=0
 VAR_BAR_PROGRESS=0
