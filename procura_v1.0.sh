@@ -1,6 +1,6 @@
 #!/bin/bash
 # Search text inside files list (tree ./*) and show file by Alexsandro Farias (dejavudf@gmail.com)
-# version 2.0 - built 20200916
+# version 1.0 - built 20200916
 # Ubuntu/Debian
 
 VAR_TEXT=""
