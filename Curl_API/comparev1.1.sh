@@ -11,7 +11,7 @@ VAR_XMC_FILE="ipsxmc.csv"
 VAR_OPMON_FILE="ipsopmon.txt"
 VAR_OUTPUT_FILE="listafinal.txt"
 
-rm ./listafinal.txt
+rm ./"$VAR_OUTPUT_FILE"
 
 cat < ./"$VAR_XMC_FILE" | while read -r VAR_XMC
 do
