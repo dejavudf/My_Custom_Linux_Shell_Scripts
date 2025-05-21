@@ -2,6 +2,7 @@
 # by Alexsandro - github/dejavudf
 # v1.1 - 21/05/2025
 # debian/ubuntu/mint
+# compare and list info (ip, host and site) inside file ipsxmc.csv not find inside file ipsopmon.txt
 
 #formato arquivo ipsopmon.txt: basta ter os ips dentros do arquivo (areas: services e hosts)
 #formato arquivo ipsxmc.csv (arquivo exportado do xmc).
