@@ -1,7 +1,7 @@
 #!/bin/bash
 # by Alexsandro - github/dejavudf
 # v1.0 - 20/05/2025
-#variables
+# compare and list info (ip, host and site) inside file ipsxmc.csv not find inside file ipsopmon.txt
 #formato arquivo ipsopmon.txt: basta ter os ips dentros do arquiov (serviço e host)
 #formato arquivo ipsxmc: nome;localidade;IP
 
