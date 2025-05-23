@@ -12,6 +12,8 @@ createmyvmv2.0.sh: create vm using virt-install (goto style: using main menu)
 
 capturev1.0.sh: tcpdump with menu (options: protocol, target ip/subnet, port, save file, run in background)
 
+comparev1.0.sh: Compare primary column inside file01.txt versus primary column inside file2.txt - both files with 3 columns. Primary key: column 1. Results: only_in_file01.txt, only_in_file02.txt and inside_both_files.txt
+
 dialog_tui_menuv1.0.sh: learn to use dialog with text user interface
 
 eve_ng_backup_cisco_labs_configs_files.sh: backup cisco ios configs files from eve-ng labs
