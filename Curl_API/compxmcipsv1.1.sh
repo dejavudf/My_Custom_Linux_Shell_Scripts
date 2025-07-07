@@ -26,7 +26,7 @@ do
 	echo 'Working: -'
 	clear
 	echo 'Working: \'
-	if grep -i "$VAR_IP" ./"$VAR_OPMON_FILE"
+	if grep -iw "$VAR_IP" ./"$VAR_OPMON_FILE"
 	then
 		continue
 	else
