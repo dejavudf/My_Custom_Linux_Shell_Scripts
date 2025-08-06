@@ -7,7 +7,7 @@ do
 	VAR_DATE=$(date '+%Y/%m/%d/%H:%M:%S')
 	clear
 	echo "Testando URL. Aguarde..."
-	if curl -s -o /dev/null -w "%{http_code}" https://apiportal.axa.com.br/portal/ | grep 200
+	if curl -s -o /dev/null -w "%{http_code}" https://www.uol.com.br/portal/ | grep 200
 	then
 		echo "Data/Hora: $VAR_DATE - Status: Sucesso" >> logurl.txt
 	else
