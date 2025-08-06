@@ -3,13 +3,14 @@
 #VAR
 VAR_CONTADOR=1
 VAR_SLEEP=10
+VAR_TOTAL=30
 
 rm ./logdns.txt
 
-while [ "$VAR_CONTADOR" -lt "11" ]
+while [ "$VAR_CONTADOR" -le "30" ]
 do
 	clear
-	echo "Checking DNS: round "$VAR_CONTADOR". Please, wait..."
+	echo "Checking DNS: round "$VAR_CONTADOR" of "$VAR_TOTAL""". Please, wait..."
 	#google
 	dig @8.8.8.8 login.microsoftonline.com > ./logdns.txt
 	dig @8.8.4.4 login.microsoftonline.com >> ./logdns.txt
