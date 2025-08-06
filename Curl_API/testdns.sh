@@ -8,7 +8,7 @@ do
 	VAR_DATE=$(date '+%Y/%m/%d/%H:%M:%S')
 	clear
 	echo "Testando DNS. Aguarde..."
-	if nslookup apigtw.axa.com.br >> ./logdnsfull.txt
+	if nslookup www.uol.com.br >> ./logdnsfull.txt
 	then
 		echo "Sucesso!"
 		echo "Data/Hora: $VAR_DATE - Status: Sucesso" >> logdns.txt
