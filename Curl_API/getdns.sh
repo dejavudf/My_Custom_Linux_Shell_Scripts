@@ -13,7 +13,7 @@ do
 	clear
 	echo "Checking DNS: round "$VAR_CONTADOR" of "$VAR_TOTAL""". Please, wait..."
 	#google
-	dig @8.8.8.8 "$VAR_URL" > ./logdns.txt
+	dig @8.8.8.8 "$VAR_URL" >> ./logdns.txt
 	dig @8.8.4.4 "$VAR_URL" >> ./logdns.txt
 
 	#cloudflare
