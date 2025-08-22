@@ -1,12 +1,17 @@
 #!/bin/bash
+# by dejavudf (alexsandro) - https://github.com/dejavudf/
+# version 1.0
+# debian/ubuntu/mint
 
 echo "NOME_AP;MAC_AP;PORTA_AP;SWITCH_IP;SWITCH_NOME" > ./lista_extreme.txt
 find ./ -type f | grep -i ".txt" | while read -r VAR_FILE
 do
 	clear
-	echo "Lendo arquivo $VAR_FILE. Por favor, aguarde"
-        VAR_SWITCH_IP=$(echo $VAR_FILE | awk -F'-' '{print $1}' | awk -F'_20250821' '{print $1}')
+	echo "Lendo arquivo $VAR_FILE. Por favor, aguarde..."
+	VAR_SWITCH_IP=$(echo $VAR_FILE | awk -F'-' '{print $1}' | awk -F'_20250821' '{print $1}')
+	VAR_SWITCH_IP=$(echo $VAR_SWITCH_IP | sed 's/.\///g' | sed 's/_/./g' )
 	VAR_SWITCH_NOME=$(cat $VAR_FILE | grep -i '\.1 # ' | awk '{print $1}')
+	VAR_SWITCH_NOME=$(echo $VAR_SWITCH_NOME | sed 's/.1//g')
 	cat $VAR_FILE | grep -i -e "ge1" -e "eth0" | while read -r VAR_VIZINHO
 	do
 		VAR_AP_MAC=$(echo $VAR_VIZINHO | awk '{print $2}')
@@ -20,3 +25,4 @@ do
 		fi
 	done
 done
+)
