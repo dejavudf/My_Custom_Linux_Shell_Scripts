@@ -1,0 +1,1043 @@
+#!/bin/bash
+# A script to do basic network configuration.
+# Mostly written by Patrick Volkerding <volkerdi@slackware.com>.
+# Modified to use /etc/rc.d/rc.inet1.conf Tue Aug 26 16:51:48 PDT 2003 <pjv>
+# from netsight/common
+###########################################################################
+
+# This is set by the appliance build scripts
+# 1 is true
+ISUBUNTU=1
+
+###############################################################################
+#  Initialize variables that are used throughout the script
+###############################################################################
+function initNetworkVars()
+{
+   VERSION=8.5.7.28
+   DATE_STAMP=`date +%Y%m%d_%H%M`
+   
+   COMMON_LIB=/usr/postinstall/commonfunctions
+   NETWORK_PROPERTIES=/usr/postinstall/dnetconfig.properties
+
+   if [ -x $COMMON_LIB ]; then
+      source $COMMON_LIB
+   fi
+
+   if [ -f /etc/netsight-version ]; then
+      VERSION=`cat /etc/netsight-version`
+   fi
+   
+   LOG_DIR=/var/log/install
+   LOG_FILE=${LOG_DIR}/netsight_netconfig_$DATE_STAMP.log
+   
+   if [ ! -d $LOG_DIR ]; then
+      mkdir -p $LOG_DIR
+      chmod 755 $LOG_DIR
+   fi
+   
+   TMP=/var/log/setup/tmp
+   
+   if [ ! -d $TMP ]; then
+      mkdir -p $TMP
+      chmod 700 $TMP
+   fi
+
+   if [ ! -d proc -a ! -d bin -a ! -d tmp ]; then # cheap, but it works :^)
+      cd /
+   fi;
+
+   # IMPORTANT!!! NO LEADING '/' in the paths below, or this script will not
+   # function from the bootdisk.
+   RC=/etc/rc.d/rc.inet1.conf       # Where rc.inet1.conf file is.
+   INTERFACES_FILE=/etc/network/interfaces # interfaces file for ubuntu network config
+   RESOLV=/etc/resolv.conf          # Where resolv.conf file is.
+   HOSTS=/etc/hosts             # Where hosts file is.
+   ETCNETWORKS=/etc/networks        # Where networks file is.
+   USE_DHCP=""                             # Use DHCP?  "" == no.
+   DHCP_HOSTNAME=""                        # This is our DHCP hostname.
+   #
+   # defaults:
+   # NETWORK=127.0.0.0
+   NETWORK=""
+   RESPONSE=1
+   loadNetworkProperties
+}
+
+###########################################################################
+# Function to read in the dnetconfig.properties file
+###########################################################################
+function loadNetworkProperties()
+{
+   if [ -r $NETWORK_PROPERTIES ]; then
+      HOSTNM=`cat $NETWORK_PROPERTIES | grep HOSTNM= | awk '{ split($1,strs,"="); print strs[2] }'`
+      IPADDR=`cat $NETWORK_PROPERTIES | grep IPADDR= | awk '{ split($1,strs,"="); print strs[2] }'`
+      NETMASK=`cat $NETWORK_PROPERTIES | grep NETMASK= | awk '{ split($1,strs,"="); print strs[2] }'`
+      GATEWAY=`cat $NETWORK_PROPERTIES | grep GATEWAY= | awk '{ split($1,strs,"="); print strs[2] }'`
+      NAMESERVER=`cat $NETWORK_PROPERTIES | grep NAMESERVER= | awk '{ split($1,strs,"="); print strs[2] }'`
+      ALT_NAME_SERVER=`cat $NETWORK_PROPERTIES | grep ALT_NAME_SERVER= | awk '{ split($1,strs,"="); print strs[2] }'`
+      HOST_DOMAIN=`cat $NETWORK_PROPERTIES | grep HOST_DOMAIN= | awk '{ split($1,strs,"="); print strs[2] }'`
+      NIS_SERVER=`cat $NETWORK_PROPERTIES | grep NIS_SERVER= | awk '{ split($1,strs,"="); print strs[2] }'`
+      NIS_DOMAIN=`cat $NETWORK_PROPERTIES | grep NIS_DOMAIN= | awk '{ split($1,strs,"="); print strs[2] }'`
+   else
+      HOSTNM=""
+      IPADDR=""
+      NETMASK=""
+      GATEWAY=""
+      NAMESERVER=""
+      ALT_NAME_SERVER=""
+      HOST_DOMAIN=""
+      NIS_SERVER=""
+      NIS_DOMAIN=""
+   fi
+}
+
+function writeNetworkProperties()
+{
+cat << EOF > $NETWORK_PROPERTIES
+####################################################################
+# File: /usr/postinstall/dnetconfig.properties
+#
+# Description: This file defines the default settings for the 
+# dnetconfig script
+####################################################################
+   HOSTNM=$HOSTNM
+   IPADDR=$IPADDR
+   NETMASK=$NETMASK
+   GATEWAY=$GATEWAY
+   NAMESERVER=$NAMESERVER
+   ALT_NAME_SERVER=$ALT_NAME_SERVER
+   HOST_DOMAIN=$HOST_DOMAIN
+   NIS_SERVER=$NIS_SERVER
+   NIS_DOMAIN=$NIS_DOMAIN
+EOF
+}
+
+###############################################################################
+#  Create the /etc/network/interfaces file (ubuntu)
+###############################################################################
+function createInterfacesFile()
+{
+  #NETWORK_LINE="#network"
+  #BCAST_LINE="#broadcast"
+  
+  #if [ -x /bin/ipmask -a "$IPADDR" != "" -a "$NETMASK" != "" ] ; then
+  #  NETWORK=`/bin/ipmask $NETMASK $IPADDR | cut -d" " -f1`
+  #  BCAST=`/bin/ipmask $NETMASK $IPADDR | cut -d" " -f2`
+  #  if [ "$NETWORK" != "" ] ; then
+  #    NETWORK_LINE="network $NETWORK"
+  #  fi
+  #  if [ "$BCAST" != "" ] ; then
+  #    BCAST_LINE="broadcast $BCAST"
+  #  fi
+  #fi
+  
+  DNS_NAMESERVER_LINE=""
+  DNS_SEARCH_LINE=""
+  if [ "" != "${NAMESERVER}" ] ; then
+      DNS_NAMESERVER_LINE="dns-nameservers $NAMESERVER $ALT_NAME_SERVER"
+      if [ "" != "${HOST_DOMAIN}" ] ; then
+          DNS_SEARCH_LINE="dns-search $HOST_DOMAIN"
+      fi  
+  fi  
+
+   log "Creating ${INTERFACES_FILE}..."
+/bin/cat << ENDFILE > $INTERFACES_FILE
+# $INTERFACES_FILE
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet static
+    address $IPADDR
+    netmask $NETMASK
+    gateway $GATEWAY
+    $DNS_NAMESERVER_LINE
+    $DNS_SEARCH_LINE
+
+ENDFILE
+
+
+if [ ! "$ETHONE_IP" == "" ] ; then
+
+/bin/cat << ENDFILE >> $INTERFACES_FILE
+
+# The secondary network interface
+auto eth1
+iface eth1 inet static
+    address $ETHONE_IP
+    netmask $ETHONE_MASK
+    #network 10.20.84.0
+    #broadcast 10.20.84.255
+    gateway $NACGATEWAY
+    # dns-* options are implemented by the resolvconf package, if installed
+    dns-nameservers $NACNAMESERVER $ALT_NAME_SERVER
+    dns-search $DOMAIN
+
+ENDFILE
+
+fi
+
+
+}
+
+
+############################################################################
+#             The networks file.
+############################################################################
+function createNetworksFile()
+{
+/bin/cat <<EOF >$ETCNETWORKS
+#
+# networks  This file describes a number of netname-to-address
+#       mappings for the TCP/IP subsystem.  It is mostly
+#       used at boot time, when no name servers are running.
+#
+
+loopback    127.0.0.0
+localnet    $NETWORK
+
+# End of networks.
+EOF
+chmod 644 $ETCNETWORKS
+}
+
+############################################################################
+#              The hosts file.
+############################################################################
+function createHostsFile()
+{
+#echo "Creating /$HOSTS..."
+HOST_LINE="127.0.0.1 localhost
+$IPADDR $HOSTNM.$HOST_DOMAIN $HOSTNM"
+
+/bin/cat << EOF > $HOSTS
+#
+# hosts     This file describes a number of hostname-to-address
+#       mappings for the TCP/IP subsystem.  It is mostly
+#       used at boot time, when no name servers are running.
+#       On small systems, this file can be used instead of a
+#       "named" name server.  Just add the names, addresses
+#       and any aliases to this file...
+#
+# By the way, Arnt Gulbrandsen <agulbra@nvg.unit.no> says that 127.0.0.1
+# should NEVER be named with the name of the machine.  It causes problems
+# for some (stupid) programs, irc and reputedly talk. :^)
+#
+
+# For loopbacking.
+$HOST_LINE
+
+# End of hosts.
+
+EOF
+chmod 644 $HOSTS
+}
+
+############################################################################
+#           The resolv.conf file.
+############################################################################
+function createResolvConfFile()
+{
+  systemctl disable systemd-resolved.service >> $LOG_FILE 2>&1
+  systemctl stop systemd-resolved >> $LOG_FILE 2>&1
+
+  rm -rf $RESOLV
+  echo "search $HOST_DOMAIN" >$RESOLV
+if [ ! "$NAMESERVER" = "" ]; then
+  echo "nameserver $NAMESERVER" >>$RESOLV
+fi
+if [ ! "$ALT_NAME_SERVER" = "" ]; then
+  echo "nameserver $ALT_NAME_SERVER" >>$RESOLV
+fi
+if [ -f $RESOLV ]; then
+  chmod 644 $RESOLV
+fi
+}
+
+############################################################################
+#           The rc.netdevice file.
+############################################################################
+function createNetDeviceFile()
+{
+if [ -r /cardfound ]; then
+  if [ ! "`cat /cardfound`" = "" ]; then
+    cat << EOF > etc/rc.d/rc.netdevice
+# Load module for network device.
+# This script is automatically generated during the installation.
+
+/sbin/modprobe `cat /cardfound`
+
+EOF
+    chmod 755 etc/rc.d/rc.netdevice
+  fi
+fi
+rm -f $TMP/tempmsg /cardfound
+}
+
+###########################################################################
+# Function to write out the /etc/HOSTNAME file
+###########################################################################
+function createHostNameFile()
+{
+    
+    if [ "$ISUBUNTU" == 1 ] ; then
+        if [ ! "$HOST_DOMAIN" = "" ]; then
+            echo "$HOSTNM.$HOST_DOMAIN" > /etc/hostname
+        else
+            echo "$HOSTNM" > /etc/hostname
+        fi
+    else
+        if [ ! "$HOST_DOMAIN" = "" ]; then
+            echo "$HOSTNM.$HOST_DOMAIN" > /etc/HOSTNAME
+        else
+            echo "$HOSTNM" > /etc/HOSTNAME
+        fi
+    fi
+}
+
+############################################################################
+#           The nis file.
+############################################################################
+function createNisFile()
+{
+	/bin/cat <<EOF >/etc/default/nis
+#
+# /etc/defaults/nis     Configuration settings for the NIS daemons.
+#
+
+# Are we a NIS server and if so what kind (values: false, slave, master)?
+NISSERVER=false
+
+# Are we a NIS client?
+NISCLIENT=false
+
+# Location of the master NIS password file (for yppasswdd).
+# If you change this make sure it matches with /var/yp/Makefile.
+YPPWDDIR=/etc
+
+# Do we allow the user to use ypchsh and/or ypchfn ? The YPCHANGEOK
+# fields are passed with -e to yppasswdd, see it's manpage.
+# Possible values: "chsh", "chfn", "chsh,chfn"
+YPCHANGEOK=chsh
+
+# NIS master server.  If this is configured on a slave server then ypinit
+# will be run each time NIS is started.
+NISMASTER=
+
+# Additional options to be given to ypserv when it is started.
+YPSERVARGS=
+
+# Additional options to be given to ypbind when it is started.  
+YPBINDARGS=-no-dbus
+
+# Additional options to be given to yppasswdd when it is started.  Note
+# that if -p is set then the YPPWDDIR above should be empty.
+YPPASSWDDARGS=
+
+# Additional options to be given to ypxfrd when it is started. 
+YPXFRDARGS=
+EOF
+chmod 644 /etc/default/nis
+}
+
+
+###########################################################################
+# Function to write out the yp.conf file
+###########################################################################
+function createYpConfFile()
+{
+	echo "NIS_DOMAIN: " $NIS_DOMAIN >> $LOG_FILE 2>&1
+	echo "NIS_SERVER: " $NIS_SERVER >> $LOG_FILE 2>&1
+	if [ "$NIS_DOMAIN" != "" -a "$NIS_SERVER" != "" ]; then
+		echo "$NIS_DOMAIN" > /etc/defaultdomain
+		echo "domain $NIS_DOMAIN server $NIS_SERVER" > /etc/yp.conf
+		
+		if [ "$ISUBUNTU" == 1 ] ; then
+			if [ ! -f /etc/default/nis ]; then
+				createNisFile
+				echo "Created nis file" >> $LOG_FILE 2>&1
+			fi
+			sed -i -e 's/NISCLIENT=false/NISCLIENT=true/g' /etc/default/nis >> $LOG_FILE 2>&1
+			
+			# service ypbind restart - this causes "stop: Unknown instance:   "
+			
+			systemctl enable rpcbind.service >> $LOG_FILE 2>&1
+			systemctl start rpcbind.service >> $LOG_FILE 2>&1
+			
+			systemctl enable nis >> $LOG_FILE 2>&1
+			systemctl stop nis >> $LOG_FILE 2>&1
+			systemctl start nis >> $LOG_FILE 2>&1
+		else
+			/etc/rc.d/rc.yp
+		fi
+	else
+		if [ -f /etc/defaultdomain ] ; then
+			log "Removing /etc/defaultdomain"
+			rm -f /etc/defaultdomain >> $LOG_FILE 2>&1
+		fi
+		
+		if [ -f /etc/yp.conf ] ; then
+			log "Removing /etc/yp.conf"
+			rm -f /etc/yp.conf >> $LOG_FILE 2>&1
+		fi
+		
+		if [ -f /etc/default/nis ] ; then
+			log "Removing /etc/yp.conf"
+			rm -f /etc/default/nis >> $LOG_FILE 2>&1
+		fi
+		
+		echo "About to stop and remove rpcbind and nis from startup" >> $LOG_FILE 2>&1
+        systemctl stop rpcbind.service >> $LOG_FILE 2>&1
+        systemctl disable rpcbind.service >> $LOG_FILE 2>&1
+		
+		systemctl stop nis >> $LOG_FILE 2>&1
+        systemctl disable nis >> $LOG_FILE 2>&1
+       
+
+	fi
+}
+
+###########################################################################
+# Function to write out the yp.conf file
+###########################################################################
+function adjustJbossProperties()
+{
+  if [ -f /var/Extreme_Networks/.netsight ] ; then
+    log "Adjusting JBoss properties IP address"
+    . /var/Extreme_Networks/.netsight
+    if [ `grep $IPADDR ${netsightDir}/appdata/NSJBoss.properties > /dev/null 2>&1;echo $?` -eq 1 ]; then
+       sed -i "s/jboss.bind.address=.*/jboss.bind.address=$IPADDR/" ${netsightDir}/appdata/NSJBoss.properties
+       log "IP Address changed, restarting services.."
+       /etc/init.d/nsserver restart
+    fi
+  fi
+}
+###########################################################################
+# Function to write out network configuration files
+###########################################################################
+function writeConfigFiles() {
+    createInterfacesFile
+    createNetworksFile
+    createHostsFile
+    createHostNameFile
+    createResolvConfFile
+    createNetDeviceFile
+    createYpConfFile
+    adjustJbossProperties
+} # end writeConfigFiles
+
+#################################################################
+# Function to prompt the user for a host name
+#################################################################
+function enterHostname()
+{
+   log "Prompting user for host name"
+   if [ "$HOSTNM" = "" ]; then
+     DEFAULT_HOST=""
+     HOST_PROMPT="(Required):"
+   else
+     DEFAULT_HOST=$HOSTNM
+     HOST_PROMPT="[$HOSTNM]:"
+   fi
+   
+   while [ 0 ]; do
+      echo -n "Enter the hostname for the appliance $HOST_PROMPT "
+      read TEMP_HOSTNM;
+      
+      if [ "$TEMP_HOSTNM" = "" -a ! "$DEFAULT_HOST" = "" ]; then
+         TEMP_HOSTNM=$DEFAULT_HOST
+      fi
+      
+      if [ "$TEMP_HOSTNM" = "" ]; then
+         echo "The appliance may not function correctly if the host name is left empty."
+         echo "Are you sure you want to leave the host name blank (y/n) [n]? "
+         getYesNoResponse "n"
+         if [ $? = 0 ]; then
+            HOSTNM=$TEMP_HOSTNM
+            break;
+         fi
+      elif  [ "$TEMP_HOSTNM" = "$DEFAULT_HOST" ] ; then
+         # this will bypass hostname validation if the hostname hasn't changed
+         HOSTNM=$TEMP_HOSTNM
+         break;
+      else 
+         validateName $TEMP_HOSTNM host
+         if [ $? = 0 ]; then
+             HOSTNM=$TEMP_HOSTNM
+             break;
+         fi
+      fi
+   done
+}
+
+
+
+
+#################################################################
+# Function to initialized the default domain name and prompt
+#################################################################
+function initDefaultDomain()
+{
+   if [ "$HOST_DOMAIN" = "" ]; then
+      DEFAULT_HOST_DOMAIN=""
+      HOST_DOMAIN_PROMPT="(Optional):"
+   else
+      DEFAULT_HOST_DOMAIN=$HOST_DOMAIN
+      HOST_DOMAIN_PROMPT="[$HOST_DOMAIN]:"
+   fi
+}
+
+#################################################################
+# Function to prompt the user for a domain name
+#################################################################
+function enterDomainName()
+{
+   if [ "$NAMESERVER" != "" ]; then
+      if [ "$HOST_DOMAIN" = "" ]; then
+         DEFAULT_HOST_DOMAIN=""
+         HOST_DOMAIN_PROMPT="(Required):"
+      else
+         initDefaultDomain
+      fi
+   else
+      initDefaultDomain
+   fi
+
+   while [ 0 ]; do
+      log "Prompting user for domain name"
+      echo  
+      echo -n "Enter the domain name for $HOSTNM $HOST_DOMAIN_PROMPT " 
+      read TEMP_HOST_DOMAIN;
+   
+      if [ "$TEMP_HOST_DOMAIN" = "" ]; then
+        if [ "$HOST_DOMAIN_PROMPT" = "(Required):" ]; then
+           echo "The domain name is required when the DNS name server is specified. Please enter a domain name."
+           continue
+        else
+           HOST_DOMAIN=$DEFAULT_HOST_DOMAIN
+           break;
+        fi
+      else
+        validateName $TEMP_HOST_DOMAIN domain
+        if [ $? = 0 ]; then
+           HOST_DOMAIN=$TEMP_HOST_DOMAIN
+           break;
+        fi
+      fi
+   done
+}
+
+###############################################################################
+# Get the current IP address for the appliance
+###############################################################################
+function initDefaultIpAddress()
+{
+   DEFAULT_IPADDR="192.168.1.1"
+   
+   if [ ! "$IPADDR" = "" -o "$IPADDR" = ".1" ]; then
+      DEFAULT_IPADDR=$IPADDR
+   elif [ -a /etc/rc.d/rc.inet1.conf ]; then
+      TMP_DEFAULT_IPADDR=`cat /etc/rc.d/rc.inet1.conf | grep 'IPADDR\[0\]' | cut -f2 -d \= | sed s/\"//g` 
+      if [ ! "$TMP_DEFAULT_IPADDR" = "" ]; then
+         DEFAULT_IPADDR=$TMP_DEFAULT_IPADDR
+      fi
+   fi
+}
+
+#################################################################
+# Function to prompt the user for an IP Address
+#################################################################
+enterIp()
+{
+   log "Prompting user for the IP address"
+   
+   initDefaultIpAddress
+      
+   echo
+   while [ 0 ]; do
+      echo -n "Enter the IP address for $HOSTNM [$DEFAULT_IPADDR]: " 
+      read TEMP_IPADDR;
+      
+      if [ "$TEMP_IPADDR" = "" ]; then
+         IPADDR=$DEFAULT_IPADDR;
+         break;
+      fi
+      
+      validateIpAddressStrict $TEMP_IPADDR 4 254
+      
+      if [ $? = 0 ]; then
+         IPADDR=$TEMP_IPADDR
+         break;
+      fi
+ done
+}
+
+###############################################################################
+# Get the current network mask for the appliance
+###############################################################################
+function initDefaultNetMask()
+{   
+   DEFAULT_NETMASK="255.255.255.0"
+   
+   if [ ! "$NETMASK" = "" ]; then
+      DEFAULT_NETMASK=$NETMASK
+   elif [ -a /etc/rc.d/rc.inet1.conf ]; then
+      TMP_DEFAULT_IPADDR=`cat /etc/rc.d/rc.inet1.conf | grep 'NETMASK\[0\]' | cut -f2 -d \= | sed s/\"//g` 
+      if [ ! "$TMP_DEFAULT_NETMASK" = "" ]; then
+         DEFAULT_NETMASK=$TMP_DEFAULT_NETMASK
+      fi
+   fi
+}
+
+#################################################################
+# Function to prompt the user for the Network Address Mask
+#################################################################
+function enterNetMask()
+{
+   log "Prompting user for the network mask"
+   
+   initDefaultNetMask
+   
+   echo 
+         
+   while [ 0 ]; do
+      echo -n "Enter the IP netmask [$DEFAULT_NETMASK]: "
+      read TEMP_NETMASK;
+        
+      if [ "$TEMP_NETMASK" = "" ]; then
+         NETMASK=$DEFAULT_NETMASK
+         break;
+      fi
+        
+      validateIpAddressStrict $TEMP_NETMASK 4 255
+
+      if [ $? = 0 ]; then
+         maskAsNum=$(addressToNum $TEMP_NETMASK)
+         validateNetMask $maskAsNum
+      else
+         continue;
+      fi
+      
+      if [ $? = 0 ]; then
+         NETMASK=$TEMP_NETMASK
+         break;
+      fi
+
+   done
+}
+
+#################################################################
+# Function to prompt the user for the Gateway address
+#################################################################
+function enterGateway()
+{
+   # only suggest a gateway if it is not configured, or it is the installed default
+   if [ "$GATEWAY" != "" -a "$GATEWAY" != "192.168.1.1" ] ; then
+       DEFAULT_GATEWAY="$GATEWAY"
+   else
+       DEFAULT_GATEWAY="`echo $IPADDR | cut -f 1-3 -d .`.1"
+   fi
+   
+   echo
+   
+   while [ 0 ]; do
+      echo -n "Enter the gateway address [$DEFAULT_GATEWAY]: "
+      read TEMP_GATEWAY;
+         
+      if [ "$TEMP_GATEWAY" = "" ]; then
+         GATEWAY=$DEFAULT_GATEWAY
+         break;
+      fi
+          
+      validateIpAddressStrict $TEMP_GATEWAY 4 254
+      
+      if [ $? = 0 ]; then
+         validateGateway $IPADDR $NETMASK $TEMP_GATEWAY
+      else
+         continue;
+      fi   
+      
+      if [ $? = 0 ]; then
+         GATEWAY=$TEMP_GATEWAY
+         break;
+      fi
+   done
+}
+
+#################################################################
+# Function to prompt the user for a name server
+#################################################################
+function enterNameserver()
+{
+   if [ "$NAMESERVER" = "" ]; then
+      NAMESERVER_PROMPT="(Optional):"
+      DEFAULT_NAMESERVER=""
+   else
+      DEFAULT_NAMESERVER=$NAMESERVER
+      NAMESERVER_PROMPT="[$NAMESERVER]:"
+   fi
+           
+   while [ 0 ]; do
+      echo
+      echo -n "Enter the IP address of the name server $NAMESERVER_PROMPT " 
+      read TEMP_NAMESERVER;
+         
+      if [ "$TEMP_NAMESERVER" = "" ]; then
+         NAMESERVER=$DEFAULT_NAMESERVER
+         break;
+      else   
+         validateIpAddressStrict $TEMP_NAMESERVER 4 254
+          
+         if [ $? = 0 ]; then
+            NAMESERVER=$TEMP_NAMESERVER
+            break;
+         fi    
+      fi
+   done
+   
+   # if a primary nameserver is set, allow the user to set a secondary
+   if [ "$NAMESERVER" != "" ] ; then
+      enterAltNameserver
+   else
+      ALT_NAME_SERVER=""
+   fi
+   
+}
+
+
+
+#################################################################
+# Function to prompt the user for an alternate name server
+#################################################################
+function enterAltNameserver()
+{
+   if [ "$ALT_NAME_SERVER" = "" ]; then
+      ALT_NAME_SERVER_PROMPT="(Optional):"
+      DEFAULT_ALT_NAME_SERVER=""
+   else
+      DEFAULT_ALT_NAME_SERVER=$ALT_NAME_SERVER
+      ALT_NAME_SERVER_PROMPT="[$ALT_NAME_SERVER]:"
+   fi
+           
+   while [ 0 ]; do
+      echo
+      echo -n "Enter the IP address of an alternate name server $ALT_NAME_SERVER_PROMPT " 
+      read TEMP_ALT_NAME_SERVER;
+         
+      if [ "$TEMP_ALT_NAME_SERVER" = "" ]; then
+         ALT_NAME_SERVER=$DEFAULT_ALT_NAME_SERVER
+         break;
+      else   
+         validateIpAddressStrict $TEMP_ALT_NAME_SERVER 4 254
+          
+         if [ $? = 0 ]; then
+            ALT_NAME_SERVER=$TEMP_ALT_NAME_SERVER
+            break;
+         fi    
+      fi
+   done
+}
+
+
+
+#################################################################
+# Function to display an display message for NIS configuration
+#################################################################
+function showNisBanner()
+{
+   echo "================================================================================"
+   echo "NIS Server Configuration"
+   echo "================================================================================"
+   echo "The NIS server is used to authenticate users logging into the appliance. Please"
+   echo "enter the information requested below. Entering an NIS server is optional, but"
+   echo "after choosing to enter an NIS server IP address, entry of an NIS domain is"
+   echo "required.  You will not be prompted for the NIS domain if the NIS server address"
+   echo "is not entered."
+   echo "================================================================================"  
+   echo
+}
+
+
+
+#################################################################
+# Function to prompt the user to use NIS
+#################################################################
+function promptUseNIS()
+{
+   echo""
+   DEFAULT_NIS_PROMPT="n"
+   
+   if [ "$NIS_SERVER" != "" ]; then
+      DEFAULT_NIS_PROMPT="y"
+      echo "NIS is currently configured on this appliance.  Disabling it will require a reboot."
+   fi
+   
+   echo -n "Do you want to use NIS (y/n) [$DEFAULT_NIS_PROMPT]? "
+   
+   getYesNoResponse "$DEFAULT_NIS_PROMPT"
+   if [ $? = 0 ]; then
+      enterNisServer
+  else
+      if [ "$DEFAULT_NIS_PROMPT" == "y" ] ; then
+          # NIS has been disabled
+          NIS_DISABLED_REBOOT="y"
+      fi
+      NIS_SERVER=""
+      NIS_DOMAIN=""
+   fi
+}
+
+#################################################################
+# Function to prompt the user to enter the NIS server IP
+#################################################################
+function enterNisIp()
+{  
+   if [ "$NIS_SERVER" = "" ]; then
+      DEFAULT_NIS_SERVER=""
+      NIS_SERVER_PROMPT=":"
+   else
+      DEFAULT_NIS_SERVER=$NIS_SERVER
+      NIS_SERVER_PROMPT="[$NIS_SERVER]:"
+   fi
+           
+   while [ 0 ]; do
+      echo
+      echo -n "Enter the IP address of the NIS server $NIS_SERVER_PROMPT " 
+      read TEMP_NIS_SERVER;
+         
+      if [ "$TEMP_NIS_SERVER" = "" ]; then
+         if [ "$DEFAULT_NIS_SERVER" = "" ]; then
+             continue;
+         else
+             NIS_SERVER=$DEFAULT_NIS_SERVER
+             break;
+         fi
+      else   
+         validateIpAddressStrict $TEMP_NIS_SERVER 4 254
+          
+         if [ $? = 0 ]; then
+            NIS_SERVER=$TEMP_NIS_SERVER
+            break;
+         fi    
+      fi
+   done
+}
+
+#################################################################
+# Function to prompt the user to enter the NIS domain
+#################################################################
+function enterNisDomain()
+{
+   log "Prompting user for NIS domain name"
+   if [ "$NIS_DOMAIN" = "" ]; then
+     DEFAULT_NIS_DOMAIN=""
+     NIS_DOMAIN_PROMPT="(Required):"
+   else
+     DEFAULT_NIS_DOMAIN=$NIS_DOMAIN
+     NIS_DOMAIN_PROMPT="[$NIS_DOMAIN]:"
+   fi
+   
+   while [ 0 ]; do
+      echo
+      echo -n "Enter the NIS domain name $NIS_DOMAIN_PROMPT "
+      read TEMP_NIS_DOMAIN;
+      
+      if [ "$TEMP_NIS_DOMAIN" = "" -a "$NIS_DOMAIN_PROMPT" != "(Required):" ]; then
+         NIS_DOMAIN=$DEFAULT_NIS_DOMAIN
+         break;
+      fi
+      
+      if [ "$TEMP_NIS_DOMAIN" != "" ]; then
+        validateName $TEMP_NIS_DOMAIN "NIS domain"
+        if [ $? = 0 ]; then
+           NIS_DOMAIN=$TEMP_NIS_DOMAIN
+           break;
+        fi
+      fi
+   done
+}
+
+###############################################################################
+# Configure NIS information
+###############################################################################
+function enterNisServer()
+{
+   enterNisIp
+   
+   if [ "$NIS_SERVER" != "" ]; then
+      enterNisDomain
+   fi
+}
+
+###############################################################################
+# Displays the choices available for configuring the network
+###############################################################################
+function showNetworkConfigMenu()
+{
+   NIS_DISPLAY="$NIS_SERVER/$NIS_DOMAIN"
+   if [ "$NIS_DISPLAY" = "/" ]; then
+      NIS_DISPLAY=""
+   fi 
+   
+   clear
+   echo "================================================================================"
+   echo "Confirm Network Settings"
+   echo "================================================================================"
+   echo "These are the settings you have entered. Enter 0 or any key other than a"
+   echo "valid selection to continue. If you need to make a change, enter the"
+   echo "appropriate number now or run the /usr/postinstall/dnetconfig script at a"
+   echo "later time."
+   echo "================================================================================"
+   echo
+   echo "0. Accept settings and continue"
+   echo "1. Hostname:            $HOSTNM"
+   echo "2. IP address:          $IPADDR"
+   echo "3. Netmask:             $NETMASK"
+   echo "4. Gateway:             $GATEWAY"
+   echo "5. Nameserver:          $NAMESERVER $ALT_NAME_SERVER"
+   echo "6. Domain name:         $HOST_DOMAIN"
+   echo "7. NIS Server/Domain:   $NIS_DISPLAY"
+   echo      
+   echo -n "Enter selection [0]:"
+}
+
+###############################################################################
+# Process the response from network settings menu
+###############################################################################
+function processUserResponse()
+{
+   RESPONSE=$1
+   case $RESPONSE in
+   1)
+       #echo "$RESPONSE - Configuring the host name"
+       enterHostname;;
+   2)
+       #echo "$RESPONSE - Configuring the IP address"
+       enterIp;;
+   3)
+       #echo "$RESPONSE - Configuring the network mask"
+       enterNetMask;;
+   4)
+       #echo "$RESPONSE - Configuring the gateway"
+       enterGateway;;
+   5)
+       #echo "$RESPONSE - Configuring the name server"
+       enterNameserver;;
+   6)
+       #echo "$RESPONSE - Configuring the domain name"
+       enterDomainName;;
+   7)
+       #echo "$RESPONSE - Configuring the NIS server"
+       promptUseNIS;;
+   *)
+       #echo "$RESPONSE - Accept current settings";;
+   esac
+}
+
+#################################################################
+# Function to prompt the user to confirm network settings
+#################################################################
+function confirmNetworkSetup()
+{
+   #echo "Confirming network setup. RESPONSE = $RESPONSE"
+ 
+   # the ubuntu bash interpretter was complaining about the old format
+   if [ $ISUBUNTU == 1 ] ; then
+       while [[ $RESPONSE > 0 && $RESPONSE < 8 ]] ; do
+           showNetworkConfigMenu
+           read -n 1 RESPONSE
+           echo
+           processUserResponse $RESPONSE
+       done
+   else
+       while [ "$RESPONSE" -gt 0 -a "$RESPONSE" -lt 8  ] ; do
+           showNetworkConfigMenu
+           read -n 1 RESPONSE
+           echo
+           processUserResponse $RESPONSE
+       done
+   fi
+
+   clear 
+   #echo "Adding $GATEWAY as the default" 
+   
+   writeNetworkProperties
+   
+   /sbin/route add default gw $GATEWAY metric 1 > /dev/null 2>&1
+   writeConfigFiles
+}
+
+#################################################################
+# Function to set the BROADCAST and NETWORK variables
+#################################################################
+function setBroadcastAndNetworkAddresses()
+{
+   BROADCAST=`ipmask $NETMASK $IPADDR | cut -f 1 -d ' '`
+   NETWORK=`ipmask $NETMASK $IPADDR | cut -f 2 -d ' '`
+}
+
+###############################################################################
+# Shows an introductory message for the network configuration 
+###############################################################################
+function showNetworkConfigIntro()
+{  
+   echo "================================================================================"
+   echo "Management Center Suite Network Configuration"
+   echo "================================================================================"
+}
+
+#################################################################
+# Function to run the full network setup sequence
+#################################################################
+function fullNetworkSetup()
+{
+   clear
+   showNetworkConfigIntro
+   enterHostname
+   enterIp
+   enterNetMask
+   enterGateway
+   enterNameserver
+   enterDomainName
+   setBroadcastAndNetworkAddresses
+   promptUseNIS
+   #enterNisServer
+   confirmNetworkSetup
+}
+
+#################################################################
+# Main script execution block
+#################################################################
+function main()
+{
+    initNetworkVars   
+    fullNetworkSetup   
+   
+    # Bring up network
+    /bin/hostname $HOSTNM
+   
+    #Reset the network interfaces
+    export HOSTNAME=$HOSTNM
+    systemctl restart snmpd.service
+    ip addr flush eth0 >> $LOG_FILE 2>&1
+    systemctl restart networking.service >> $LOG_FILE 2>&1
+    
+    if [ "$NIS_DISABLED_REBOOT" == "y" ] ; then
+        echo "WARNING: If NIS was previously enabled and has been disabled, an immediate reboot is required."
+    fi
+   
+}
+
+#################################################################
+# Body of script
+#################################################################
+main
+exit 0
+
+

@@ -1,0 +1,980 @@
+#!/bin/bash
+#
+# Date Time configuration script
+# Version: 3.2.2
+#
+
+###############################################################################
+# Function to initialize script specific variables
+###############################################################################
+function initGlobalVars()
+{
+   TRUE=0
+   FALSE=1
+   USE_NTP=$TRUE
+   MAX_NTPSERVERS=5
+   declare NTP_SERVER[$MAX_NTPSERVERS]=
+   CHRONY_CONF=/etc/chrony/chrony.conf
+   TAG_FILE=/etc/tag-type
+   DATE_PROPERTIES=/usr/postinstall/dateconfig.properties
+   if [ "$DO_ENABLE" != "$FALSE" ]; then
+      DO_ENABLE=$TRUE
+   fi
+}
+
+###########################################################################
+# Function to load configuration from dateconfig.properties
+###########################################################################
+function loadDateProperties()
+{
+   if [ -r $DATE_PROPERTIES ]; then
+      USE_NTP=`cat $DATE_PROPERTIES | grep USE_NTP= | awk '{ split($1,strs,"="); print strs[2] }'`
+      TZF=`cat $DATE_PROPERTIES | grep TZF= | awk '{ split($1,strs,"="); print strs[2] }'`
+      NTP_SERVER=( $( egrep "^NTP_SERVER=" $DATE_PROPERTIES  | cut -d"=" -f2 ) )
+   else
+      TZF=America/New_York
+      declare -a NTP_SERVER
+   fi
+}
+
+###########################################################################
+# Function to convert a yY or nN response to a numeric value
+###########################################################################
+function getYesNoResponse()
+{
+   RETVAL=$FALSE
+   
+   if [ "$1" = "" ]; then
+      DEFAULT_RESPONSE="n"
+   else
+      DEFAULT_RESPONSE=$1
+   fi
+
+   read -n 1 response;
+   echo ""
+   
+   if [ "$response" = "" ]; then
+      response=$DEFAULT_RESPONSE
+   fi
+   
+   if [ "$response" = "y" -o "$response" = "Y" ]; then
+     RETVAL=$TRUE
+   else
+     RETVAL=$FALSE
+   fi
+
+   return $RETVAL
+}
+
+###########################################################################
+# Function to validate IP Address formatting
+# This function was copied from dnetconfig
+# This checks IP address syntax.
+# usage: syntax_check ADDRESS #-OF-EXPECTED-SEGMENTS (up to 4)
+# example: syntax_check 123.22.43.1 4
+# returns: 0=found correct  1=too many fields  2=non numeric field found
+###########################################################################
+function validateIpAddress() {
+    RESULT=0 
+    SCRATCH=$1
+    SCRATCH=`echo $SCRATCH | tr "." "/"`
+    INDEX=$2
+
+    while [ ! "$INDEX" = "0" ]; do
+        FIELD=`basename $SCRATCH`
+        SCRATCH=`dirname $SCRATCH`
+        if [ $FIELD -ge 0 -a $FIELD -le 255 ] 1> /dev/null 2> /dev/null; then
+            true
+        else
+            RESULT=2; # non-numeric field
+        fi
+        INDEX=`expr $INDEX - 1`
+    done
+
+    if [ ! "$SCRATCH" = "." ]; then
+        RESULT=1; # too many arguments
+    fi
+
+    if [ ! "$RESULT" = "0" ]; then
+        echo "The address you have entered seems to be non-standard."
+        echo "We were expecting $2 groups of numbers separated by dots, like: 127.0.0.1"
+        echo -n "Are you absolutely sure you want to use the address $1 (y/n) [y]? "
+        
+        getYesNoResponse "y"
+
+        RESULT=$?
+    fi
+
+    return $RESULT;
+}
+
+###########################################################################
+# Checks whether the passed in value is a number
+###########################################################################
+function isValidNumber()
+{
+   RET_VAL=1
+   
+   expr $1 + 1 > /dev/null 2>&1 
+   STATUS=$?
+   
+   if [ $STATUS -eq 0 ]; then
+     RET_VAL=0
+   elif [ $STATUS -eq 1 -a !"$STATUS" = ""  ]; then
+     RET_VAL=0
+   fi
+   return $RET_VAL
+}
+
+###############################################################################
+# Display a text banner prompting user to use NTP
+###############################################################################
+function showNtpBanner()
+{
+   DEFAULT_NTP_PROMPT="y"
+   
+   if [ $USE_NTP -eq $FALSE ]; then
+      DEFAULT_NTP_PROMPT="n"
+   fi
+   
+   clear
+   echo "================================================================================"
+   echo "Configure Date And Time Settings"
+   echo "================================================================================"
+   echo "The engine date and time can be set manually or using an external"
+   echo "Network Time Protocol (NTP) server. It is strongly recommended that"
+   echo "NTP is used to configure the date and time to ensure accuracy of time"
+   echo "values for SNMP communications and logged events. Up to $MAX_NTPSERVERS"
+   echo "server IP addresses may be entered if NTP is used."
+   echo "================================================================================"
+   echo  
+   echo -n "Do you want to use NTP (y/n) [$DEFAULT_NTP_PROMPT]? "
+   
+   getYesNoResponse "$DEFAULT_NTP_PROMPT"
+   
+   if [ $? = 0 ]; then
+      USE_NTP=$TRUE
+   else
+      USE_NTP=$FALSE
+   fi
+}
+
+###############################################################################
+# Initialize NTP specific variables
+###############################################################################
+function initNtpVars()
+{
+   i=0
+   
+   if [ -f $CHRONY_CONF ]; then
+      while read line; do 
+           serverLine=`echo "$line" | grep ^server`
+           if [ -n "$serverLine" ]; then 
+              NTP_SERVER[$i]=`echo $serverLine | awk '{ print $2}'`
+              
+              i=`expr $i + 1`   
+
+              if [ $i -gt $MAX_NTPSERVERS ]; then
+                break
+              fi 
+          fi
+      done < $CHRONY_CONF
+   fi
+}
+
+###############################################################################
+# Function to stop the ntp daemon
+###############################################################################
+function stopNtp()
+{
+  systemctl stop chrony
+}
+
+###############################################################################
+# Function to start the ntp daemon
+###############################################################################
+function startNtp()
+{
+  systemctl start chrony
+}
+
+###############################################################################
+# Function to write out the ntp.conf file
+###############################################################################
+function writeNtpConfNew()
+{
+/bin/cat << EOF > $CHRONY_CONF
+# Welcome to the chrony configuration file. See chrony.conf(5) for more
+# information about usuable directives.
+
+# This will use (up to):
+# - 4 sources from ntp.ubuntu.com which some are ipv6 enabled
+# - 2 sources from 2.ubuntu.pool.ntp.org which is ipv6 enabled as well
+# - 1 source from [01].ubuntu.pool.ntp.org each (ipv4 only atm)
+# This means by default, up to 6 dual-stack and up to 2 additional IPv4-only
+# sources will be used.
+# At the same time it retains some protection against one of the entries being
+# down (compare to just using one of the lines). See (LP: #1754358) for the
+# discussion.
+#
+
+# This directive specify the location of the file containing ID/key pairs for
+# NTP authentication.
+keyfile /etc/chrony/chrony.keys
+
+# This directive specify the file into which chronyd will store the rate
+# information.
+driftfile /var/lib/chrony/chrony.drift
+
+# Uncomment the following line to turn logging on.
+#log tracking measurements statistics
+
+# Log files location.
+logdir /var/log/chrony
+
+# Stop bad estimates upsetting machine clock.
+maxupdateskew 100.0
+
+# This directive enables kernel synchronisation (every 11 minutes) of the
+# real-time clock. Note that it can’t be used along with the 'rtcfile' directive.
+rtcsync
+
+# Step the system clock instead of slewing it if the adjustment is larger than
+# one second, but only in the first three clock updates.
+makestep 1 3
+EOF
+   #Generate server list
+   i=0
+   while [ "${NTP_SERVER[$i]}" != "" ]; do
+      echo "server ${NTP_SERVER[$i]} iburst" >> $CHRONY_CONF
+      i=`expr $i + 1`   
+   done
+}
+
+###############################################################################
+# Function to synchronize the appliance clock
+###############################################################################
+function synchronizeToServers()
+{
+   stopNtp
+   echo "Attempting to sync time with given NTP addresses"
+   chronyd -q
+}
+
+###############################################################################
+# Function to prompt the user for a single NTP server
+###############################################################################
+function enterSingleNtpServer()
+{
+   i=$1
+
+   if [ "${NTP_SERVER[$i]}" = "" ]; then
+      DEFAULT_NTP_SERVER=""
+      NTP_SERVER_PROMPT="(Required):"
+   else
+      DEFAULT_NTP_SERVER=${NTP_SERVER[$i]}
+      NTP_SERVER_PROMPT="[${NTP_SERVER[$i]}]:"
+   fi
+     
+   echo
+   while [ 0 ]; do
+      echo -n "Please enter a NTP Server IP Address $NTP_SERVER_PROMPT " 
+      read TEMP_NTP_SERVER;
+   
+      if [ "$TEMP_NTP_SERVER" = "" ]; then
+         TEMP_NTP_SERVER=$DEFAULT_NTP_SERVER
+      fi
+    
+      if [ "$TEMP_NTP_SERVER" != "" ]; then
+         validateIpAddress $TEMP_NTP_SERVER 4 WARN
+   
+         if [ $? = 0 ]; then
+            NTP_SERVER[$i]=$TEMP_NTP_SERVER
+            break;
+         fi
+      else
+         echo "A blank value cannot be entered for a NTP server IP. Please try again."
+      fi
+   done
+}
+
+#################################################################
+# Function to prompt the user for up to $MAX_NTPSERVERS NTP 
+# servers.
+#################################################################
+function enterNtpServers()
+{
+   #log "Prompting the user for the NTP Server IP addresses"
+   i=0
+   enterIp=$TRUE
+
+   while [ $i -lt $MAX_NTPSERVERS ]; do
+       #echo "Testing for IP prompt at index $i : enterIp = $enterIp TRUE = $TRUE"
+       if [ $enterIp -eq $TRUE ]; then
+          enterSingleNtpServer $i
+          
+          ANOTHER_NTP_SERVER="n"
+          i=`expr $i + 1`
+          if [ -n "${NTP_SERVER[$i]}" ]; then
+             ANOTHER_NTP_SERVER="y"
+          fi
+          
+          echo 
+          echo -n "Would you like to add another server (y/n) [$ANOTHER_NTP_SERVER]? "
+   
+          getYesNoResponse "$ANOTHER_NTP_SERVER"
+   
+          if [ $? = $FALSE ]; then
+             enterIp=$FALSE
+             #echo "Setting prompt for IP address to false. enterIP value = $enterIp"
+          fi
+       else
+          NTP_SERVER[$i]=""
+          i=`expr $i + 1`
+       fi
+   done
+}
+
+###############################################################################
+# Displays the choices available for running the script
+###############################################################################
+showNtpConfigMenu()
+{
+   clear
+   echo "============================================================================="
+   echo "NTP Servers"
+   echo "============================================================================="
+   echo "These are the currently specified NTP servers:"
+   echo
+   i=0
+   while [ "${NTP_SERVER[$i]}" != "" ]; do
+      echo "${NTP_SERVER[$i]}"
+      i=`expr $i + 1`   
+   done
+   echo
+   echo "Enter 0 or any key other than a valid selection to complete NTP configuration and continue." 
+   echo "If you need to make a change, enter the appropriate number from the"
+   echo "choices listed below."
+
+
+   echo
+   echo "0. Accept the current settings and continue"
+   echo "1. Restart NTP server selection" 
+   echo "2. Set date and time manually"
+   echo "============================================================================="
+   echo
+   echo -n "Enter selection [0]: "
+}
+
+###############################################################################
+# Process the response from the NTP configuration menu
+###############################################################################
+processNtpMenuSelection()
+{
+   echo
+   case $RESPONSE in
+   1)
+       #echo "$RESPONSE - Restart NTP server selection"
+       configNtp;;
+   2)
+       #echo "$RESPONSE - Set date and time manually"
+       enterDateTime;;
+   *)
+       #echo "$RESPONSE - Accept current settings"
+       clear
+
+   esac
+}
+
+###############################################################################
+# NTP menu loop
+###############################################################################
+function confirmNtpSetup()
+{
+   RESPONSE=1
+   
+   while [ $RESPONSE -gt 0 -a $RESPONSE -lt 3 -a "$USE_NTP" = "$TRUE" ]; do
+      showNtpConfigMenu
+      read -n 1 RESPONSE
+      
+      if [ "$RESPONSE" = "" ]; then
+         RESPONSE=0
+      fi
+      
+      processNtpMenuSelection
+   done
+}
+
+###############################################################################
+# Function to disable NTP if script run again with NTP enabled and user opts
+# not to use NTP
+###############################################################################
+function disableNtpd()
+{
+   stopNtp
+   systemctl disable chrony.service
+}
+
+###############################################################################
+# Function to enable NTP
+###############################################################################
+function enableNtpd()
+{
+   synchronizeToServers
+   restartSyslog
+   setHardwareClock
+   startNtp
+
+   systemctl enable chrony.service
+   
+}
+
+###############################################################################
+# Function to persist the NTP changes
+###############################################################################
+function applyNtpSettings()
+{
+   #if [ -f $NTP_CONF ]; then
+   #   writeNtpConfOld
+   #else
+      writeNtpConfNew
+   #fi
+
+   if [ "$DO_ENABLE" = "$TRUE" -a "$USE_NTP" = "$TRUE" ]; then
+      enableNtpd
+   else
+      disableNtpd
+   fi
+}
+
+
+###############################################################################
+# Function to configure NTP 
+###############################################################################
+function configNtp()
+{
+   enterNtpServers
+}
+
+###############################################################################
+# Prompt the user to enter the month
+###############################################################################
+function enterMonth()
+{
+   DEFAULT_MONTH=`date +%m`
+   
+   while [ 0 ]; do
+      echo
+      echo -n "Please enter the month [$DEFAULT_MONTH]: "
+      read TEMP_MONTH
+      
+      if [ "$TEMP_MONTH" = "" ]; then
+         TEMP_MONTH=$DEFAULT_MONTH
+      fi
+      
+      CHARS=`echo $TEMP_MONTH | wc -c`
+      
+      if [ $TEMP_MONTH -gt 0 -a $TEMP_MONTH -lt 13 ]; then
+         if [ $CHARS -eq 2 ]; then
+            TEMP_MONTH=0$TEMP_MONTH
+         fi  
+         
+         MONTH_OF_YEAR=$TEMP_MONTH
+         break;
+      else
+         echo "An invalid value was entered for the month. Please try again."
+      fi
+   done
+}
+
+###############################################################################
+# Prompt the user to enter the day
+###############################################################################
+function enterDay()
+{
+   DEFAULT_DAY=`date +%d`
+   
+   while [ 0 ]; do
+      echo
+      echo -n "Please enter the day of the month [$DEFAULT_DAY]: "
+      read TEMP_DAY
+      
+      if [ "$TEMP_DAY" = "" ]; then
+         TEMP_DAY=$DEFAULT_DAY
+      fi
+      
+      CHARS=`echo $TEMP_DAY | wc -c`
+      
+      if [ $TEMP_DAY -gt 0 -a $TEMP_DAY -lt 32 ]; then
+         if [ $CHARS -eq 2 ]; then
+            TEMP_DAY=0$TEMP_DAY
+         fi 
+         
+         DAY_OF_MONTH=$TEMP_DAY
+         break;
+      else
+         echo "An invalid value was entered for the day. Please try again."
+      fi
+   done 
+}
+
+###############################################################################
+# Prompt the user to enter the year
+###############################################################################
+function enterYear()
+{
+   DEFAULT_YEAR=`date +%Y`
+   
+   while [ 0 ]; do
+      echo
+      echo -n "Please enter the year [$DEFAULT_YEAR]: "
+      read TEMP_YEAR
+      
+      if [ "$TEMP_YEAR" = "" ]; then
+         TEMP_YEAR=$DEFAULT_YEAR
+      fi
+      
+      CHARS=`echo $TEMP_YEAR | wc -c`
+      
+      if [ $TEMP_YEAR -gt 0 -a $CHARS -eq 5 ]; then
+         YEAR=$TEMP_YEAR
+         break;
+      else
+         echo "An invalid value was entered for the year. Please try again."
+      fi
+   done 
+}
+
+###############################################################################
+# Prompt the user to enter the hour
+###############################################################################
+function enterHour()
+{
+   DEFAULT_HOUR=`date +%H`
+   
+   while [ 0 ]; do
+      echo
+      echo -n "Please enter the hour of day [$DEFAULT_HOUR]: "
+      read TEMP_HOUR
+      
+      if [ "$TEMP_HOUR" = "" ]; then
+         TEMP_HOUR=$DEFAULT_HOUR
+      fi
+      
+      CHARS=`echo $TEMP_HOUR | wc -c`
+      
+      if [ $TEMP_HOUR -gt -1 -a $TEMP_HOUR -lt 24 ]; then
+         if [ $CHARS -eq 2 ]; then
+            TEMP_HOUR=0$TEMP_HOUR
+         fi 
+         
+         HOUR_OF_DAY=$TEMP_HOUR
+         break;
+      else
+         echo "An invalid value was entered for the hour. Please try again."
+      fi
+   done 
+}
+
+###############################################################################
+# Prompt the user to enter the minutes
+###############################################################################
+function enterMinute()
+{
+   DEFAULT_MINUTES=`date +%M`
+   
+   while [ 0 ]; do
+      echo
+      echo -n "Please enter the minutes [$DEFAULT_MINUTES]: "
+      read TEMP_MINUTES
+      
+      if [ "$TEMP_MINUTES" = "" ]; then
+         TEMP_MINUTES=$DEFAULT_MINUTES
+      fi
+      
+      CHARS=`echo $TEMP_MINUTES | wc -c`
+      
+      if [ $TEMP_MINUTES -gt -1 -a $TEMP_MINUTES -lt 60 ]; then
+         if [ $CHARS -eq 2 ]; then
+            TEMP_MINUTES=0$TEMP_MINUTES
+         fi
+          
+         MINUTE_OF_HOUR=$TEMP_MINUTES
+         break;
+      else
+         echo "An invalid value was entered for the minutes. Please try again."
+      fi
+   done 
+}
+
+###############################################################################
+# Prompt the user to enter the seconds
+###############################################################################
+function enterSecond()
+{
+   DEFAULT_SECONDS=`date +%M`
+   
+   while [ 0 ]; do
+      echo
+      echo -n "Please enter the seconds [$DEFAULT_SECONDS]: "
+      read TEMP_SECONDS
+      
+      if [ "$TEMP_SECONDS" = "" ]; then
+         TEMP_SECONDS=$DEFAULT_SECONDS
+      fi
+      
+      CHARS=`echo $TEMP_SECONDS | wc -c`
+      
+      if [ $TEMP_SECONDS -gt -1 -a $TEMP_SECONDS -lt 60 ]; then
+         if [ $CHARS -eq 2 ]; then
+            TEMP_SECONDS=0$TEMP_SECONDS
+         fi
+                
+         SECOND_OF_MINUTE=$TEMP_SECONDS
+         break;
+      else
+         echo "An invalid value was entered for the seconds. Please try again."
+      fi
+   done 
+}
+
+###############################################################################
+# Display a banner with instructions for date and time entry
+###############################################################################
+function showDateTimeBanner()
+{
+   echo "================================================================================"
+   echo "Set Date And Time"
+   echo "================================================================================"
+   echo "The current system date and time is:    $CURRENT_DATE_TIME"   
+   echo "Please enter the values for date and time as directed where input is expected in"
+   echo "the following format:"
+   echo
+   echo "MM   - 2 digit month of year"
+   echo "DD   - 2 digit day of month"
+   echo "YYYY - 4 digit year"
+   echo "hh   - 2 digit hour of day using a 24 hour clock"
+   echo "mm   - 2 digit minute of hour"
+   echo "ss   - 2 digit seconds"
+   echo "================================================================================"
+   echo  
+}
+
+###############################################################################
+# Run the full date and time entry sequence
+###############################################################################
+function runFullDateTime()
+{
+   clear
+   showDateTimeBanner
+   enterMonth
+   enterDay
+   enterYear
+   enterHour
+   enterMinute
+   enterSecond
+}
+
+###############################################################################
+# Prompt the user to enter the system date and time
+###############################################################################
+function enterDateTime()
+{
+   NEW_DATE=""
+   USE_NTP=$FALSE
+ 
+   runFullDateTime
+   
+   #echo -n "Enter the current date and time (MMDDhhmmYYYY.ss): "
+
+   NEW_DATE="${MONTH_OF_YEAR}${DAY_OF_MONTH}${HOUR_OF_DAY}${MINUTE_OF_HOUR}${YEAR}.${SECOND_OF_MINUTE}"
+   echo "The date will be set to $NEW_DATE"
+   enterUtc
+}
+
+###########################################################################
+# Function to link the selected time zone file to /etc/localtime
+###########################################################################
+function setTimezoneNonGraphical()
+{
+
+   if [ -a "/usr/share/zoneinfo/$TZF" ]; then
+      #echo "Linking /usr/share/zoneinfo/$TZF to /etc/localtime"
+      if [ -f /etc/localtime ] ; then
+          rm /etc/localtime
+      fi
+      ln -sf "/usr/share/zoneinfo/$TZF" /etc/localtime
+      
+      # update the /etc/timezone file as well
+      dpkg-reconfigure --frontend noninteractive tzdata
+      
+   else
+      echo "$TZF does not appear to be a valid time zone."
+   fi 
+
+}
+
+###########################################################################
+# Function to invoke the pseudo graphical timeconfig
+###########################################################################
+function setTimezoneGraphical()
+{
+   clear
+   # This script is only available on Slackware
+   # /usr/sbin/timeconfig
+   dpkg-reconfigure tzdata
+   
+   # This line was added as a workaround for a java bug that has since
+   # been fixed.  See net0023490 for details.
+   # cp -P /etc/localtime-copied-from /etc/localtime
+}
+
+###########################################################################
+# Function to help the user select the correct time zone.
+###########################################################################
+function showTimezoneMenu()
+{
+   clear
+   echo "================================================================================"
+   echo "Set Time Zone"
+   echo "================================================================================"
+   echo "You will now be asked to enter the time zone information for this system."
+   echo "Available time zones are stored in files in the /usr/share/zoneinfo directory."
+   echo "Please select from one of the following example time zones:"
+   echo 
+   echo "1. US Eastern"
+   echo "2. US Central"
+   echo "3. US Mountain"
+   echo "4. US Pacific"
+   echo "5. Other - Shows a graphical list"
+   echo "================================================================================"
+   echo
+   echo -n "Enter selection [$DEFAULT_TZ_SELECTION]: "
+}
+
+###############################################################################
+# Process the response from time zone menu
+###############################################################################
+function processUserResponse()
+{
+   clear
+   case $RESPONSE in
+   1)
+       TZF=America/New_York
+       setTimezoneNonGraphical;;
+   2)
+       TZF=America/Chicago
+       setTimezoneNonGraphical;;
+   3)
+       TZF=America/Denver
+       setTimezoneNonGraphical;;
+   4)
+       TZF=America/Los_Angeles
+       setTimezoneNonGraphical;;
+   5)
+       setTimezoneGraphical;;
+   9)
+       setTimezoneGraphical;;
+   *)
+       TZF=America/New_York
+       setTimezoneNonGraphical;;
+   esac
+}
+
+###############################################################################
+# Prompt the user to use UTC. Using UTC only sets a flag on the date command
+# and is not needed when NTP is used. UTC is implicitly used when NTP is 
+# enabled.
+###############################################################################
+function enterUtc()
+{
+   TEMP_UTC=""
+   clear
+   echo "================================================================================"
+   echo "Use UTC"
+   echo "================================================================================"
+   echo "The system clock can be set to use UTC. Specifying no for using UTC, "
+   echo "sets the hardware clock using localtime."
+   echo "================================================================================"
+   echo
+   echo -n "Do you want to use UTC (y/n) [n]? "
+   
+   getYesNoResponse "n"
+   
+   if [ $? = 0 ]; then
+      TEMP_UTC="--utc"
+   fi
+}
+
+###############################################################################
+# Prompt the user to enter time zone information
+###############################################################################
+function enterTimezone()
+{
+   DEFAULT_TZ_SELECTION=0
+
+   TZF=America/Chicago
+   cat /etc/timezone | grep $TZF >> /dev/null
+   if [ $? = 0 ] ; then
+     DEFAULT_TZ_SELECTION=2
+   fi
+
+   if [ $DEFAULT_TZ_SELECTION = 0 ] ; then
+       TZF=America/Denver
+       cat /etc/timezone | grep $TZF >> /dev/null
+       if [ $? = 0 ] ; then
+           DEFAULT_TZ_SELECTION=3
+       fi
+   fi
+
+   if [ $DEFAULT_TZ_SELECTION = 0 ] ; then
+       TZF=America/Los_Angeles
+       cat /etc/timezone | grep $TZF >> /dev/null
+       if [ $? = 0 ] ; then
+           DEFAULT_TZ_SELECTION=4
+       fi
+   fi
+
+   if [ $DEFAULT_TZ_SELECTION = 0 ] ; then
+       TZF=America/New_York
+       DEFAULT_TZ_SELECTION=1
+   fi
+
+   while [ 0 ]; do
+      showTimezoneMenu
+      read -n 1 RESPONSE
+      if [ "$RESPONSE" = "" ]; then
+         RESPONSE=$DEFAULT_TZ_SELECTION
+      fi
+      isValidNumber $RESPONSE
+      IS_NUM=$?
+      if [ $IS_NUM -eq 0 ]; then
+         if [ $RESPONSE -gt 0 -a $RESPONSE -lt 10 ]; then
+           break;
+         fi
+      fi
+   done
+   
+   processUserResponse
+}
+
+###############################################################################
+# Apply the date using the date command
+# date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]
+###############################################################################
+function applyDateSettings()
+{
+   date $TEMP_UTC $NEW_DATE > /dev/null
+   DATE_SET=$?
+   setHardwareClock
+   CURRENT_DATE_TIME=`date +"%c"`
+
+   if [ $DATE_SET -eq 0 ]; then
+      echo "The system date and time is now set to:    $CURRENT_DATE_TIME" 
+      restartSyslog
+   else
+      echo
+      echo "There was an error setting the system date and time."
+      echo "The time is currently set to: $CURRENT_DATE_TIME"
+   fi
+}
+
+###############################################################################
+# Function to restart the syslog
+###############################################################################
+function restartSyslog()
+{
+    systemctl restart rsyslog
+}
+
+###############################################################################
+# Function to set the hardware clock
+###############################################################################
+function setHardwareClock()
+{
+   /sbin/hwclock --systohc
+}
+
+function updateNtp()
+{
+   initGlobalVars
+   initNtpVars
+
+   if [ "$USE_NTP" = "$FALSE" ]; then
+      DO_ENABLE=$FALSE
+   fi
+   
+   applyNtpSettings  
+}
+
+function easyConfigNtp()
+{
+   initGlobalVars
+   initNtpVars
+   loadDateProperties
+
+   if [ "$USE_NTP" = "$TRUE" ]; then
+      setTimezoneNonGraphical
+      applyNtpSettings  
+   else
+      disableNtpd
+      applyDateSettings
+   fi
+}
+
+###############################################################################
+# Main execution function
+###############################################################################
+function main()
+{
+   initGlobalVars
+   initNtpVars
+   showNtpBanner
+
+   if [ "$USE_NTP" = "$TRUE" ]; then
+      configNtp
+      confirmNtpSetup
+   else
+      disableNtpd
+      enterDateTime
+   fi
+
+   enterTimezone
+
+   #echo "USE_NTP = $USE_NTP - TRUE = $TRUE"
+   applyNtpSettings
+
+   if [ "$USE_NTP" = "$FALSE" ]; then 
+      applyDateSettings
+   fi
+}
+
+###############################################################################
+# Body of script not wrapped by a function
+###############################################################################
+#
+# During nacconfig, this script is called twice, once with the noEnable argument,
+# that causes the user to be prompted for all the settings, but ntpd will not be
+# started yet.  The second time with updateNtp, this will skip all the user
+# questions, rewrite the ntp.conf, and start ntpd.
+#
+
+CURRENT_DATE_TIME=`date +"%c"`
+DO_ENABLE=0
+
+#echo "dateconfig called with ARG = $1"
+
+# leave this for backwards compatibility - upgrading embedded nac on NetSight install
+if [ "$1" = "updateNacNtp" ]; then
+   updateNtp
+elif [ "$1" = "updateNtp" ]; then
+   updateNtp
+elif [ "$1" = "noEnable" ]; then
+   DO_ENABLE=1
+   main
+elif [ "$1" = "--easy" -o "$1" = "-noprompts" ]; then
+   easyConfigNtp
+else
+   main
+fi
+exit 0
