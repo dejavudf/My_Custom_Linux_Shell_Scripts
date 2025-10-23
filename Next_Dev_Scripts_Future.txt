@@ -11,3 +11,4 @@ compara list1 com list2 (avançado, colunas automáticas). Compare two files wit
 Pega lista de ip e gerar subnets - get ip list and generate subnets
 Smumarizacao de subnets - summarize networks
 Checar data expiração certificados - test site certification validation/expiration
+api via shell script
