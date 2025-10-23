@@ -1,0 +1,13 @@
+Next Dev Scripts (future):
+
+Lei de ohm - Ohm Law
+Remover overlap subnets - Remove Subnets Overlaps
+Calcular subnets - Calc IPv4 and IPV6 network
+Converter Ip para hex - Convert IP to HEX
+Calculo resistência interna - Cacl Internal Resistence
+Cálculo mini omimetro - Mili Omimether Calc
+Cálculo led resistor - Calc Leds (resistors) 
+compara list1 com list2 (avançado, colunas automáticas). Compare two files with automatic columns selection
+Pega lista de ip e gerar subnets - get ip list and generate subnets
+Smumarizacao de subnets - summarize networks
+Checar data expiração certificados - test site certification validation/expiration
