@@ -1,7 +1,7 @@
 #!/bin/bash
 # by dejavudf/alexsandro farias - github.com/dejavudf
 # version 1.1 12/11/2025
-# bulk background ping with date and hour
+# bulk background nping tcp with date and hour
 # debian/ubuntu/mint
 
 #variables
