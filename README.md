@@ -6,6 +6,8 @@ backup_gitbhub_repositoryv1.0.sh: backup repository txt list and compact all
 
 bckpi2v1.0.sh: backup pi2 (ubuntu) scripts to nas server (OMV) via scp
 
+bulkpingv1.1.sh: bulk ping with date and time
+
 createmyvmv1.0.sh: create vm using virt-install (sequential)
 
 createmyvmv2.0.sh: create vm using virt-install (goto style: using main menu)
