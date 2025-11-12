@@ -54,6 +54,8 @@ mysearchv1.0sh: find/search text inside files with tui menu (recursive directori
 
 mysearchv2.0sh: find/search text inside files with tui menu (recursive directories) - show file by file (full text)
 
+npingbulktcpv1.0.sh: tcp port bulk testing using nping tool (nmap package)
+
 pcaprmframev1.0.sh: script to remove first bytes from pcap file (remove underlay encapsulation like VXLAN, GENEVE, MAC-in-MAC, QinQ, etcetera) 
 
 pcaprmframev1.1.sh: script to remove first bytes from pcap file (remove underlay encapsulation like VXLAN, GENEVE, MAC-in-MAC, QinQ, etcetera) 
