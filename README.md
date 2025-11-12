@@ -60,6 +60,8 @@ pcaprmframev1.1.sh: script to remove first bytes from pcap file (remove underlay
 
 pingbulkv1.0.sh: bulk background ping
 
+pingbulkv1.1.sh: bulk background ping with date and hour
+
 procura_v1.0.sh: find/search text inside files with tui menu (recursive directories) - show file by file (full text)
 
 recoveryv1.0.sh: recovery deleted files via testdisk
