@@ -1,4 +1,6 @@
 #!/bin/bash -xv
+# by Alexsandro - github/dejavudf
+# debian/ubuntu/mint
 
 #variables
 VAR_DEVICE_IP=""
