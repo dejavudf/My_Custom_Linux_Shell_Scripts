@@ -1,4 +1,6 @@
 #!/bin/bash
+# by Alexsandro - github/dejavudf
+# debian/ubuntu/mint
 
 VAR_DATE=$(date '+%Y%m%d_%H:%M')
 VAR_TIME=1800
