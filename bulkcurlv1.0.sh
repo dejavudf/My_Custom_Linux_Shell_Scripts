@@ -5,7 +5,6 @@
 # debian/ubuntu/mint
 
 #variables
-VAR_DT=$(date '+%Y_%m_%d_%H_%M_%S')
 VAR_TIME="90"
 VAR_INTERVAL="15"
 VAR_URL=""
@@ -17,7 +16,7 @@ VAR_SCRIPT="curlmon.sh"
 touch ./"$VAR_SCRIPT"
 chmod u+x ./"$VAR_SCRIPT"
 echo '#!/bin/bash' > ./"$VAR_SCRIPT"
-echo '# var1=url var2=time var3=interval var4=dt var5=host' >> ./"$VAR_SCRIPT"
+echo '# var1=url var2=time var3=interval var4=host' >> ./"$VAR_SCRIPT"
 echo 'VAR_COUNT="1"' >> ./"$VAR_SCRIPT"
 echo 'while [ "$VAR_COUNT" -le "$2" ]' >> ./"$VAR_SCRIPT"
 echo 'do' >> ./"$VAR_SCRIPT"
@@ -30,7 +29,7 @@ FUNC_BULK_PING() {
 for VAR_URL in $(cat "$VAR_FILE")
 do
         VAR_HOST=$(echo "$VAR_URL" | awk -F"/" '{print $3}')
-        sudo nohup ./curlmon.sh "$VAR_URL" "$VAR_TIME" "$VAR_INTERVAL" "$VAR_DT" "$VAR_HOST" &
+        sudo nohup ./curlmon.sh "$VAR_URL" "$VAR_TIME" "$VAR_INTERVAL" "$VAR_HOST" &
 done
 }
 
