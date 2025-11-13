@@ -1,4 +1,6 @@
 #!/bin/bash
+# by Alexsandro - github/dejavudf
+# debian/ubuntu/mint
 
 #VAR
 VAR_CONTADOR=1
