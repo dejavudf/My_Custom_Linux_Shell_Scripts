@@ -5,11 +5,11 @@ VAR_KEY="a"
 
 FUNC_PLAY_1()
 {
-	echo " ------- "
-	echo "|       |"
-	echo "|   *   |"
-	echo "|       |"
-	echo " ------- "
+		echo " ------- "
+		echo "|       |"
+		echo "|   *   |"
+		echo "|       |"
+		echo " ------- "
 }
 
 FUNC_PLAY_2()
