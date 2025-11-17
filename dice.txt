@@ -1,4 +1,5 @@
 dice
+shuf -i 1-6 -n 1
 
 There are also six array elements called 'die[]'. The script initializes the 'die' as:
 
