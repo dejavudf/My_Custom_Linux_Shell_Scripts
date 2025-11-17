@@ -44,6 +44,8 @@ myconvertervideov1.0.sh: script to convert video/audio using ffmpeg
 
 mygotov1.0.sh: how to use goto with shell scripts (main menu with submenus)
 
+myhashtreev1.0.sh: call files hash with md5sum on subtree
+
 myhashv1.0: calc file hash with md5 or sha
 
 mymp3v2.0.sh: youtube to mp3 (160kbitrate) via yt-dl
