@@ -44,7 +44,7 @@ FUNC_PLAY_5()
        	echo " ------- "
        	echo "| *   * |"
        	echo "|   *   |"
-	echo "| *   * |"
+		echo "| *   * |"
       	echo " ------- "
 }
 
