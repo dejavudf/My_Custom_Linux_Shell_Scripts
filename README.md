@@ -20,6 +20,8 @@ comparev1.0.sh: Compare primary column inside file01.txt versus primary column i
 
 dialog_tui_menuv1.0.sh: learn to use dialog with text user interface
 
+dicev1.0.sh: dice game
+
 eve_ng_backup_cisco_labs_configs_files.sh: backup cisco ios configs files from eve-ng labs
 
 getsubtitlev1.0.sh: Download subtitles script via subliminal
