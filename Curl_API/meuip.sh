@@ -1,7 +1,3 @@
-Meu IP Público é:
- 177.17.190.4
-ubuntu@ubuntu:~$ nano meuip.sh
-  GNU nano 4.8                                                                meuip.sh
 #!/bin/bash
 rm ./meuip.tmp
 
