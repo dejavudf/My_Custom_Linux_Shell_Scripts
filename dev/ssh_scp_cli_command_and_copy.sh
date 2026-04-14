@@ -2,7 +2,7 @@
 
 for VAR_IP in $(cat ip.txt)
 do
-        if sshpass -p password scp ./$1.xsf user@$VAR_IP:/usr/local/tmp/$1.xsf > "copy.log"
+        if sshpass -p password scp ./$1.txt user@$VAR_IP:/usr/local/tmp/$1.xsf > "copy.log"
         then
                 echo "$VAR_IP - Success" > success_copy.txt
         else
