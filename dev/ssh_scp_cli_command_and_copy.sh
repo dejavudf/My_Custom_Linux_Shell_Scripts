@@ -24,3 +24,26 @@ do
         sleep 120
 done
 
+#!/bin/bash
+
+#variables
+VAR_CMD="show configuration"
+#VAR_DIR="./results"
+VAR_DIR="/usr/local/Extreme_Networks/NetSight/appdata/InventoryMgr/configs/cores"
+VAR_DT=$(date '+%Y%m%d_%H%M%S');
+VAR_KEY="HostKeyAlgorithms=+ssh-rsa,ssh-dss"
+VAR_STRICT="StrictHostKeyChecking=accept-new"
+VAR_ALGO="KexAlgorithms=+diffie-hellman-group1-sha1,diffie-hellman-group14-sha1"
+
+#script start
+echo Starting Scripts...Wait...
+for VAR_IP in $(cat < ips.txt)
+do
+        if ssh -o $VAR_KEY -o $VAR_STRICT -o $VAR_ALGO suportenoc@$VAR_IP -o RemoteCommand="$VAR_CMD" > "$VAR_DIR/""$VAR_DT""_""$VAR_IP"_config.cfg
+        then
+                echo "$VAR_IP - Success" > "$VAR_DT""_"sucess.txt
+        else
+                echo "$VAR_IP - Failure" > "$VAR_DT""_"failure.txt
+        fi
+done
+
