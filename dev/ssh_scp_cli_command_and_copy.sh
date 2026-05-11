@@ -42,7 +42,7 @@ for VAR_IP in $(cat < $VAR_FILE)
 do
         if ssh -o $VAR_KEY -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP -o RemoteCommand="$VAR_CMD" > "$VAR_DIR/""$VAR_DT""_""$VAR_IP"_config.cfg
         then
-                echo "$VAR_IP - Success" >> "$VAR_DT""_"sucess.txt
+                echo "$VAR_IP - Success" >> "$VAR_DT""_"success.txt
         else
                 echo "$VAR_IP - Failure" >> "$VAR_DT""_"failure.txt
         fi
