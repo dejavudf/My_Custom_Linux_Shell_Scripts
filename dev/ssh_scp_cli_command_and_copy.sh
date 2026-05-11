@@ -28,7 +28,7 @@ done
 
 #variables
 VAR_CMD="show configuration"
-VAR_USER="suportenoc"
+VAR_USER="teste"
 VAR_DIR="/usr/local/Extreme_Networks/NetSight/appdata/InventoryMgr/configs/cores"
 VAR_DT=$(date '+%Y%m%d_%H%M%S');
 VAR_KEY="HostKeyAlgorithms=+ssh-rsa,ssh-dss"
