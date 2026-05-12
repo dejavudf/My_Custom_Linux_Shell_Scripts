@@ -2,14 +2,14 @@
 
 #variables
 VAR_CMD="show config"
-VAR_USER="teste"
+VAR_USER="suportenoc"
 VAR_DIR="/usr/local/Extreme_Networks/NetSight/appdata/InventoryMgr/configs/cores"
 VAR_DT=$(date '+%Y%m%d');
-VAR_KEY="HostKeyAlgorithms=ssh-rsa,ssh-dss"
+VAR_KEY="HostKeyAlgorithms=+ssh-rsa,ssh-dss,rsa-sha2-256,rsa-sha2-512"
 VAR_STRICT="StrictHostKeyChecking=accept-new"
 VAR_ALGO="KexAlgorithms=+diffie-hellman-group1-sha1,diffie-hellman-group14-sha1"
-VAR_FILE="teste.txt"
-VAR_ACE="PubkeyAcceptedKeyTypes=ssh-rsa"
+VAR_FILE="ips.txt"
+VAR_ACE="PubkeyAcceptedKeyTypes=+ssh-rsa,ssh-dss,rsa-sha2-256,rsa-sha2-512"
 VAR_RSA="../sub_rsa_2048_sha1"
 
 #script start
