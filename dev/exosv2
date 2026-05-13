@@ -3,6 +3,7 @@
 VAR_USER=admin
 VAR_PASSWORD=$1
 
+history -c
 rm ./*.tmp
 rm ./*.cmd
 rm ./*.log
@@ -27,3 +28,8 @@ do
                 echo "$VAR_IP - Failure" >> failure_check.log
         fi
 done
+history -c
+rm ./*.tmp
+rm ./*.cmd
+rm ./*.log
+exit 0
