@@ -2,7 +2,7 @@
 
 for VAR_IP in $(cat ip.txt)
 do
-        if sshpass -p teste ssh suportenoc@$VAR_IP -o RemoteCommand="show stpd s0 | inc Mode" >> "check.log"
+        if sshpass -p teste ssh teste@$VAR_IP -o RemoteCommand="show stpd s0 | inc Mode" >> "check.log"
         then
                 echo "$VAR_IP - Success" >> success_check.txt
         else
@@ -15,7 +15,7 @@ done
 
 for VAR_IP in $(cat ip.txt)
 do
-        if sshpass -p teste scp -o StrictHostKeyChecking=no ./$1.xsf suportenoc@$VAR_IP:/usr/local/tmp/$1.xsf > "copy.log"
+        if sshpass -p teste scp -o StrictHostKeyChecking=no ./$1.xsf teste@$VAR_IP:/usr/local/tmp/$1.xsf > "copy.log"
         then
                 echo "$VAR_IP - Success" >> success_copy.txt
         else
@@ -28,7 +28,7 @@ done
 
 for VAR_IP in $(cat ip.txt)
 do
-        if sshpass -p teste ssh suportenoc@$VAR_IP -o RemoteCommand="load script /usr/local/tmp/rstp.xsf" > "exec.log"
+        if sshpass -p teste ssh teste@$VAR_IP -o RemoteCommand="load script /usr/local/tmp/rstp.xsf" > "exec.log"
         then
                 echo "$VAR_IP - Success" >> success_exec.txt
         else
