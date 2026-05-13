@@ -2,11 +2,24 @@
 
 for VAR_IP in $(cat ip.txt)
 do
-        if sshpass -p password scp ./$1.txt user@$VAR_IP:/usr/local/tmp/$1.xsf > "copy.log"
+        if sshpass -p teste ssh suportenoc@$VAR_IP -o RemoteCommand="show stpd s0 | inc Mode" >> "check.log"
         then
-                echo "$VAR_IP - Success" > success_copy.txt
+                echo "$VAR_IP - Success" >> success_check.txt
         else
-                echo "$VAR_IP - Failure" > failure_copy.txt
+                echo "$VAR_IP - Failure" >> failure_check.txt
+        fi
+        echo "$VAR_IP" >> ./check.log
+done
+
+#!/bin/bash
+
+for VAR_IP in $(cat ip.txt)
+do
+        if sshpass -p teste scp -o StrictHostKeyChecking=no ./$1.xsf suportenoc@$VAR_IP:/usr/local/tmp/$1.xsf > "copy.log"
+        then
+                echo "$VAR_IP - Success" >> success_copy.txt
+        else
+                echo "$VAR_IP - Failure" >> failure_copy.txt
         fi
 done
 
@@ -15,13 +28,14 @@ done
 
 for VAR_IP in $(cat ip.txt)
 do
-        if sshpass -p password ssh user@$VAR_IP -o RemoteCommand=$1 > "exec.log"
+        if sshpass -p teste ssh suportenoc@$VAR_IP -o RemoteCommand="load script /usr/local/tmp/rstp.xsf" > "exec.log"
         then
-                echo "$VAR_IP - Success" > success_exec.txt
+                echo "$VAR_IP - Success" >> success_exec.txt
         else
-                echo "$VAR_IP - Failure" > failure_exec.txt
+                echo "$VAR_IP - Failure" >> failure_exec.txt
         fi
-        sleep 120
+done
+
 done
 
 #!/bin/bash
