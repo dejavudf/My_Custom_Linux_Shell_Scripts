@@ -6,7 +6,7 @@ VAR_KEY="HostKeyAlgorithms=+ssh-rsa,ssh-dss"
 VAR_STRICT="StrictHostKeyChecking=accept-new"
 VAR_ALGO="KexAlgorithms=+diffie-hellman-group1-sha1,diffie-hellman-group14-sha1"
 
-history -c
+cat /dev/null > ~/.bash_history
 rm ./*.tmp
 rm ./*.cmd
 rm ./*.log
@@ -38,7 +38,7 @@ do
                 echo "$VAR_IP - Failure" >> failure_check.log
         fi
 done
-history -c
+cat /dev/null > ~/.bash_history
 rm ./*.tmp
 rm ./*.cmd
 exit 0
