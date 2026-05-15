@@ -42,4 +42,4 @@ cat /dev/null > ~/.bash_history
 rm ./*.tmp
 rm ./*.cmd
 exit 0
-alexsandro@dccsrvprd0113:~/script$
+
