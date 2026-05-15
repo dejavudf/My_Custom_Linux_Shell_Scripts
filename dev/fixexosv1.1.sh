@@ -28,11 +28,13 @@ do
                                 VAR_DEVICE="NONE"
                                 echo "configure port $VAR_PORT display-string $VAR_DEVICE" >> ./$VAR_IP.cmd
                                 echo "configure port $VAR_PORT description-string $VAR_DEVICE" >> ./$VAR_IP.cmd
-                                sshpass -p $VAR_PASSWORD scp -o $VAR_KEY -o $VAR_STRICT -o $VAR_ALGO ./$VAR_IP.cmd $VAR_USER@$VAR_IP:/usr/local/tmp/$VAR_IP.xsf
-                                sshpass -p $VAR_PASSWORD ssh -o $VAR_KEY -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP "load script /usr/local/tmp/$VAR_IP.xsf"
-                                sshpass -p $VAR_PASSWORD ssh -o $VAR_KEY -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP "save config"
                         fi
                 done < ./$VAR_IP"_2".tmp
+                if sshpass -p $VAR_PASSWORD scp -o $VAR_KEY -o $VAR_STRICT -o $VAR_ALGO ./$VAR_IP.cmd $VAR_USER@$VAR_IP:/usr/local/tmp/$VAR_IP.xsf
+                then
+                        sshpass -p $VAR_PASSWORD ssh -o $VAR_KEY -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP "load script /usr/local/tmp/$VAR_IP.xsf"
+                        sshpass -p $VAR_PASSWORD ssh -o $VAR_KEY -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP "save config"
+                fi
         else
                 echo "$VAR_IP - Failure" >> failure_check.log
         fi
@@ -41,3 +43,4 @@ cat /dev/null > ~/.bash_history
 rm ./*.tmp
 rm ./*.cmd
 exit 0
+
