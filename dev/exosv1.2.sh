@@ -1,10 +1,14 @@
 #!/bin/bash
 
 VAR_USER=teste
-VAR_PASSWORD=$1
+#VAR_PASSWORD=$1
 VAR_KEY="HostKeyAlgorithms=+ssh-rsa,ssh-dss"
 VAR_STRICT="StrictHostKeyChecking=accept-new"
 VAR_ALGO="KexAlgorithms=+diffie-hellman-group1-sha1,diffie-hellman-group14-sha1"
+
+#get password
+echo -n "Digite a senha: "
+read -s VAR_PASSWORD
 
 cat /dev/null > ~/.bash_history
 rm ./*.tmp
