@@ -1,0 +1,36 @@
+#!/bin/bash
+if cd /home/netsight/scripts/bckcontroladoras
+then
+
+        #variables
+        VAR_PASS=$1
+        VAR_CMD="show run"
+        VAR_USER="suportenoc"
+        VAR_DIR="/usr/local/Extreme_Networks/NetSight/appdata/InventoryMgr/configs/controladoras"
+        VAR_DT=$(date '+%Y%m%d');
+        VAR_KEY="HostKeyAlgorithms=ssh-rsa,ssh-dss,rsa-sha2-256,rsa-sha2-512"
+        VAR_STRICT="StrictHostKeyChecking=accept-new"
+        VAR_ALGO="KexAlgorithms=+diffie-hellman-group1-sha1,diffie-hellman-group14-sha1"
+        VAR_FILE="ips.txt"
+        VAR_ACE="PubkeyAcceptedKeyTypes=ssh-rsa,ssh-dss,rsa-sha2-256,rsa-sha2-512"
+        VAR_RSA="../../sub_rsa_2048_sha1"
+        VAR_TIMEOUT="ConnectTimeout=10"
+
+        #get random
+        VAR_RANDOM=$(gpg --batch --passphrase "$VAR_PASS" -d -q ../random.gpg)
+
+        #script start
+        rm ./*.log
+        mkdir "$VAR_DIR/$VAR_DT"
+        echo Starting Scripts...Wait...
+        for VAR_IP in $(cat < $VAR_FILE)
+        do
+                if ../random -p $VAR_RANDOM ssh -i $VAR_RSA -o $VAR_TIMEOUT -o $VAR_KEY -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP -o $VAR_ACE -o RemoteCommand="sho                     w run-config" \
+                > "$VAR_DIR""/""$VAR_DT""/""$VAR_DT""_IDENTIFY_""$VAR_IP"_config.cfg
+                then
+                        echo "$VAR_IP - Success" >> "$VAR_DT""_"success.log
+                else
+                        echo "$VAR_IP - Failure" >> "$VAR_DT""_"failure.log
+                fi
+        done
+fi
