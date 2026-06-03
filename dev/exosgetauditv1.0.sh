@@ -3,7 +3,7 @@
 cd /home/ubuntu/tmp
 
 VAR_USER=admin
-VAR_PASSWORD="Ab123456"
+VAR_PASSWORD="teste"
 VAR_KEY="HostKeyAlgorithms=+ssh-rsa,ssh-dss"
 VAR_STRICT="StrictHostKeyChecking=accept-new"
 VAR_ALGO="KexAlgorithms=+diffie-hellman-group1-sha1,diffie-hellman-group14-sha1"
