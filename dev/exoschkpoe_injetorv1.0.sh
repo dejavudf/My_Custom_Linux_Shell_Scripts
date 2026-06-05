@@ -5,7 +5,7 @@ then
 	 #variables
         VAR_PASS=$1
         VAR_USER="suportenoc"
-        VAR_DIR="/usr/local/Extreme_Networks/NetSight/appdata/InventoryMgr/configs/chkpoe"
+        VAR_DIR="/usr/local/Extreme_Networks/NetSight/appdata/InventoryMgr/configs/poe"
         VAR_DT=$(date '+%Y%m%d');
         VAR_KEY="HostKeyAlgorithms=ssh-rsa,ssh-dss,rsa-sha2-256,rsa-sha2-512"
         VAR_STRICT="StrictHostKeyChecking=accept-new"
@@ -32,7 +32,7 @@ then
 					then
 						VAR_SYSNAME=$(cat ./$VAR_IP"_sysname".tmp | awk '{print $2}')
 						grep '[0-9]' ./$VAR_IP"_lldp".tmp | awk '{print $1,$2,$3,$6}' > ./$VAR_IP"_2".tmp
-						cat ./$VAR_IP"_2".tmp | grep -iw -e "ge1" -e "ge2" -e "eth0" -e "eth1" > ./$VAR_IP.lldp
+						cat ./$VAR_IP"_2".tmp | grep -w -e "ge1" -e "ge2" -e "eth0" -e "eth1" > ./$VAR_IP.lldp
 						grep '[0-9]' ./$VAR_IP"_poe".tmp | awk '{print $1,$2}' > ./$VAR_IP.poe
 			        	        while read -r VAR_LLDP
 	        		        	do
@@ -42,7 +42,12 @@ then
 							VAR_NAME=$(echo "$VAR_LLDP" | awk '{print $4}')
 		        	                	if ! cat ./$VAR_IP.poe | grep -iw "$VAR_PORT delivering"
 			        	                then
-        			        			echo $VAR_SYSNAME";"$VAR_IP";"$VAR_PORT";"$VAR_ID";"$VAR_PORT_ID";"$VAR_NAME >> ./$VAR_DT"_"injetor.csv
+        			        			if [ $VAR_NAME == "Not-Advertised" ] || [ $VAR_NAME == "Axis" ]
+								then
+									continue
+								else
+									echo $VAR_SYSNAME";"$VAR_IP";"$VAR_PORT";"$VAR_ID";"$VAR_PORT_ID";"$VAR_NAME >> $VAR_DIR/$VAR_DT"_"injetor.csv
+								fi
 							fi
 		        		        done < ./$VAR_IP.lldp
 					else
