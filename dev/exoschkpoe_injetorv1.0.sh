@@ -32,7 +32,7 @@ then
 					then
 						VAR_SYSNAME=$(cat ./$VAR_IP"_sysname".tmp | awk '{print $2}')
 						grep '[0-9]' ./$VAR_IP"_lldp".tmp | awk '{print $1,$2,$3,$6}' > ./$VAR_IP"_2".tmp
-						cat ./$VAR_IP"_2".tmp | grep -i -e "ge1" -e "ge2" -e "eth" > ./$VAR_IP.lldp
+						cat ./$VAR_IP"_2".tmp | grep -iw -e "ge1" -e "ge2" -e "eth0" -e "eth1" > ./$VAR_IP.lldp
 						grep '[0-9]' ./$VAR_IP"_poe".tmp | awk '{print $1,$2}' > ./$VAR_IP.poe
 			        	        while read -r VAR_LLDP
 	        		        	do
