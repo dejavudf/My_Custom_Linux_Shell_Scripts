@@ -4,4 +4,17 @@
   VAR_HOST="HostKeyAlgorithms=ssh-dss,ssh-rsa"
 	VAR_RSA="../../sub_rsa_2048_sha1"
 	VAR_FILE="ips.txt"
-	
+
+	VAR_KEY="HostKeyAlgorithms=ssh-rsa,ssh-dss,rsa-sha2-256,rsa-sha2-512"
+	VAR_STRICT="StrictHostKeyChecking=accept-new"
+	VAR_ALGO="KexAlgorithms=+diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,curve25519-sha256"
+	VAR_HOST="HostKeyAlgorithms=ssh-dss,ssh-rsa"
+	VAR_FILE="ips.txt"
+	VAR_ACE="PubkeyAcceptedKeyTypes=ssh-rsa,ssh-dss,rsa-sha2-256,rsa-sha2-512"
+
+        VAR_KEY="HostKeyAlgorithms=ssh-rsa,ssh-dss,rsa-sha2-256,rsa-sha2-512"
+        VAR_STRICT="StrictHostKeyChecking=accept-new"
+        VAR_ALGO="KexAlgorithms=+diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,curve25519-sha256"
+        VAR_HOST="HostKeyAlgorithms=ssh-dss,ssh-rsa"
+        VAR_FILE="ips.txt"
+        VAR_ACE="PubkeyAcceptedKeyTypes=ssh-rsa,ssh-dss,rsa-sha2-256,rsa-sha2-512"
