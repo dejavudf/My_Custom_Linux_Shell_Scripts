@@ -24,6 +24,7 @@ then
 	VAR_SERIAIS=""
 	VAR_COUNT="0"
 	VAR_COUNT_TOTAL="0"
+	VAR_TIMEOUT="ConnectTimeout=10"
 
 	#get random
 	VAR_RANDOM=$(gpg --batch --passphrase "$VAR_PASS" -d -q ../random.gpg)
@@ -32,10 +33,10 @@ then
 	rm ./*.log
 	for VAR_IP in $(cat ./$VAR_FILE)
 	do
-	        if ../random -p $VAR_RANDOM ssh -i $VAR_RSA -o $VAR_ACE -o $VAR_HOST -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP "dis cli pag perm"
+	        if ../random -p $VAR_RANDOM ssh -i $VAR_RSA -o $VAR_TIMEOUT -o $VAR_ACE -o $VAR_HOST -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP "dis cli pag perm"
 	        then
 	                echo "$VAR_IP - Success" >> ./success_check.log
-	                ../random -p $VAR_RANDOM ssh -i $VAR_RSA -o $VAR_ACE -o $VAR_HOST -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP "show system" > ./$VAR_IP.tmp
+	                ../random -p $VAR_RANDOM ssh -i $VAR_RSA -o $VAR_TIMEOUT -o $VAR_ACE -o $VAR_HOST -o $VAR_STRICT -o $VAR_ALGO $VAR_USER@$VAR_IP "show system" > ./$VAR_IP.tmp
 	        	VAR_SLOTS=()
 		        VAR_SERIAIS=()
 		        VAR_COUNT="0"
@@ -49,13 +50,15 @@ then
 		        do
 	        		        VAR_SERIAIS+=("$VAR_SERIAL")
 		        done
-	        	echo "Sysname: $VAR_SYSNAME - IP: $VAR_IP - Modelos (slots): ${VAR_SLOTS[*]} - Seriais: ${VAR_SERIAIS[*]} - Total de Slots: $VAR_COUNT" >> $VAR_DIR/$VAR_DT"_"stack.txt
+	        	echo "Sysname: $VAR_SYSNAME - IP: $VAR_IP - Modelos (slots): ${VAR_SLOTS[*]} - Seriais: ${VAR_SERIAIS[*]} - Total de Slots: $VAR_COUNT" >> $VAR_DIR/$VAR_DT"_"exos_stack.txt
 		        VAR_COUNT_TOTAL=$((VAR_COUNT_TOTAL + VAR_COUNT))
 		else
 			echo "$VAR_IP - Failure" >> ./failure_check.log
 		fi
 	done
-	echo "$VAR_COUNT_TOTAL" >> $VAR_DIR/$VAR_DR"_"stack.txt
+	VAR_TOTAL_STACK=$(cat $VAR_DIR/$VAR_DR"_"exos_stack.txt | wc | awk '{print $1}')
+	echo "Total de Stacks: $VAR_TOTAL_STACK" >> $VAR_DIR/$VAR_DR"_"exos_stack.txt
+	echo "Total de Switches$VAR_COUNT_TOTAL" >> $VAR_DIR/$VAR_DR"_"exos_stack.txt
 fi
 rm ./*.tmp
 rm ./*.log
