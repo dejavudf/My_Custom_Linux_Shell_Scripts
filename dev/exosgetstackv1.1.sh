@@ -58,7 +58,7 @@ then
 	done
 	VAR_TOTAL_STACK=$(cat $VAR_DIR/$VAR_DR"_"exos_stack.txt | wc | awk '{print $1}')
 	echo "Total de Stacks: $VAR_TOTAL_STACK" >> $VAR_DIR/$VAR_DR"_"exos_stack.txt
-	echo "Total de Switches$VAR_COUNT_TOTAL" >> $VAR_DIR/$VAR_DR"_"exos_stack.txt
+	echo "Total de Switches $VAR_COUNT_TOTAL" >> $VAR_DIR/$VAR_DR"_"exos_stack.txt
 fi
 rm ./*.tmp
 rm ./*.log
