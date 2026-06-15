@@ -8,6 +8,7 @@
 VAR_MODE=0
 VAR_ARRAY_SIZE=()
 VAR_ARRAY_HASH=()
+VAR_ARRAY_DUP=()
 VAR_FILE=""
 VAR_HASH=""
 VAR_DELETE=""
@@ -47,7 +48,7 @@ fi
 
 #function hash (calc file md5 hash)
 FUNC_HASH() {
-while read -r VAR_FILE
+while IFS= read -r VAR_FILE
 do
 	clear
 	echo "Checking if file $VAR_FILE is duplicated. Please, wait!"
@@ -59,13 +60,13 @@ do
 	else
 		echo "$VAR_FILE" >> ./duplicate.tmp
 	fi
-done < find "$VAR_DIR" -type f
+done < echo "${ARRAY_HASH[@]}"
 FUNC_MODE
 }
 
 #function size (check files with same size)
 FUNC_SIZE() {
-while read -r VAR_FILE
+while IFS= read -r VAR_FILE
 do
 	VAR_SIZE=$(stat -c %S "$VAR_FILE")
 	if ! echo "${ARRAY_SIZE[@]}" | grep -w "$VAR_SIZE"
