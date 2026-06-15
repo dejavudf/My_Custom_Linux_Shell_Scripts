@@ -9,6 +9,7 @@ VAR_MODE=0
 VAR_ARRAY_SIZE=()
 VAR_ARRAY_HASH=()
 VAR_ARRAY_DUP=()
+VAR_ARRAY_FILE=()
 VAR_FILE=""
 VAR_HASH=""
 VAR_DELETE=""
@@ -17,27 +18,28 @@ VAR_DELETE=""
 FUNC_MODE() {
 if [ "$VAR_MODE" == "0" ]
 then
-	clear
-	echo "Duplicated files list:"
-	if [ -f ./duplicate.tmp ]
-	then
-		cat ./duplicate.tmp
-	else
-		echo "No duplicated files found!"
-	fi
+	while IFS= read -r VAR_FILE
+	do
+		VAR_HASH=$(md5sum "$VAR_FILE" | awk '{print $1}')
+		if ! echo "${ARRAY_HASH[@]}" | grep -w "$VAR_HASH"
+		then
+			ARRAY_HASH+=("$VAR_HASH")
+		else
+			ARRAY_DUP+=("$VAR_FILE")
+		fi
+done < echo "${ARRAY_FILE[@]}"
 elif [ "$VAR_MODE" == "1" ]
 then
-	for VAR_DELETE in $(cat < ./duplicate.tmp)
+	while IFS= read -r VAR_FILE
 	do
-		if rm "$VAR_DELETE" > /dev/null 2>&1
+		VAR_HASH=$(md5sum "$VAR_FILE" | awk '{print $1}')
+		if ! echo "${ARRAY_HASH[@]}" | grep -w "$VAR_HASH"
 		then
-			clear
-			echo "File $VAR_DELETE deleted successfuly"
-			echo "$VAR_DELETE" >> ./success.log
+			ARRAY_HASH+=("$VAR_HASH")
 		else
-			echo "$VAR_DELETE" >> ./error.log
+			ARRAY_DUP+=("$VAR_FILE")
 		fi
-	done
+	done < echo "${ARRAY_FILE[@]}"
 	clear
 	echo "Script completed. Please, check files:"
 	echo "./success.log to check success"
@@ -50,17 +52,14 @@ fi
 FUNC_HASH() {
 while IFS= read -r VAR_FILE
 do
-	clear
-	echo "Checking if file $VAR_FILE is duplicated. Please, wait!"
 	VAR_HASH=$(md5sum "$VAR_FILE" | awk '{print $1}')
-	VAR_SIZE=$(stat -c %s "$VAR_FILE")
-	if ! cat < ./unique.tmp | grep "$VAR_HASH$VAR_SIZE" > /dev/null 2>&1
+	if ! echo "${ARRAY_HASH[@]}" | grep -w "$VAR_HASH"
 	then
-		echo "$VAR_HASH$VAR_SIZE" >> ./unique.tmp
+		ARRAY_HASH+=("$VAR_HASH")
 	else
-		echo "$VAR_FILE" >> ./duplicate.tmp
+		ARRAY_DUP+=("$VAR_FILE")
 	fi
-done < echo "${ARRAY_HASH[@]}"
+done < echo "${ARRAY_FILE[@]}"
 FUNC_MODE
 }
 
@@ -73,7 +72,7 @@ do
 	then
 		ARRAY_SIZE+=("$VAR_SIZE")
 	else
-		ARRAY_HASH+=("$VAR_FILE")
+		ARRAY_FILE+=("$VAR_FILE")
 	fi
 done < find "$VAR_DIR" -type f
 FUNC_HASH
