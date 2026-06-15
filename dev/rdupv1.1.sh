@@ -17,12 +17,16 @@ VAR_HASH=""
 FUNC_MODE() {
 if [ "$VAR_MODE" == "0" ]
 then
+	clear
 	echo "Duplicated files list:"
 	echo "${ARRAY_DUP[@]}"
+	exit 0
 elif [ "$VAR_MODE" == "1" ]
 then
 	while IFS= read -r VAR_FILE
 	do
+		clear
+		echo "Deleting duplicated file $VAR_FILE. Please wait."
 		if rm /y "$VAR_FILE"
 		then
 			echo "$VAR_FILE" >> ./success.log
