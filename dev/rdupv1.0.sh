@@ -39,7 +39,7 @@ then
 				echo "File $VAR_DELETE deleted successfuly"
 				echo "$VAR_DELETE" >> ./success.log
 			else
-				echo "VAR_DELETE" >> ./error.log
+				echo "$VAR_DELETE" >> ./error.log
 			fi
 		done
 		clear
