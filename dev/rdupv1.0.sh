@@ -2,7 +2,7 @@
 # by dejavudf - github.com/dejavudf
 # version 1.0 14/06/2026
 # debian/ubuntu/mint
-# find and check/remove duplicated files insid a directory tree
+# find and check/remove duplicated files inside a directory tree
 
 #delete tmp files and avoid output stdin/errors
 if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
