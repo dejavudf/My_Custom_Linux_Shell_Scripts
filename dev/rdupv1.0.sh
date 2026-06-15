@@ -5,7 +5,7 @@
 # find and check/remove duplicated files inside a directory tree (folder and subfolders)
 
 #delete tmp files and avoid output stdin/errors
-FUNC_CLEAN () }
+FUNC_CLEAN() }
 if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
 then
 	:
