@@ -88,8 +88,8 @@ else
 	clear
 	echo "Something is wrong deleting tmp files. Please, check your permissions."
 fi
-#if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
-#then
-#        :
-#fi
+if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
+then
+        :
+fi
 exit 0
