@@ -50,7 +50,6 @@ then
 	find "$VAR_DIR" -type f | while read -r VAR_FILE; do
 		clear
 		echo "Checking if file $VAR_FILE is duplicated. Please, wait!"
-		sleep 1
 		VAR_HASH=$(md5sum "$VAR_FILE" | awk '{print $1}')
 		VAR_SIZE=$(stat -c %s "$VAR_FILE")
 		if ! cat < ./unique.tmp | grep "$VAR_HASH$VAR_SIZE" > /dev/null 2>&1
@@ -84,8 +83,8 @@ else
 	clear
 	echo "Something is wrong deleting tmp files. Please, check your permissions."
 fi
-#if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
-#then
-#        :
-#fi
+if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
+then
+        :
+fi
 exit 0
