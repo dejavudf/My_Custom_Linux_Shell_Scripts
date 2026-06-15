@@ -18,28 +18,19 @@ VAR_DELETE=""
 FUNC_MODE() {
 if [ "$VAR_MODE" == "0" ]
 then
-	while IFS= read -r VAR_FILE
-	do
-		VAR_HASH=$(md5sum "$VAR_FILE" | awk '{print $1}')
-		if ! echo "${ARRAY_HASH[@]}" | grep -w "$VAR_HASH"
-		then
-			ARRAY_HASH+=("$VAR_HASH")
-		else
-			ARRAY_DUP+=("$VAR_FILE")
-		fi
-done < echo "${ARRAY_FILE[@]}"
+	echo "Duplicated files list:"
+	echo "${ARRAY_DUP[@]}"
 elif [ "$VAR_MODE" == "1" ]
 then
 	while IFS= read -r VAR_FILE
 	do
-		VAR_HASH=$(md5sum "$VAR_FILE" | awk '{print $1}')
-		if ! echo "${ARRAY_HASH[@]}" | grep -w "$VAR_HASH"
+		if rm /y "$VAR_FILE"
 		then
-			ARRAY_HASH+=("$VAR_HASH")
+			echo "$VAR_FILE" >> ./success.log
 		else
-			ARRAY_DUP+=("$VAR_FILE")
+			echo "$VAR_FILE" >> ./error.log
 		fi
-	done < echo "${ARRAY_FILE[@]}"
+	done < echo "${ARRAY_DUP[@]}"
 	clear
 	echo "Script completed. Please, check files:"
 	echo "./success.log to check success"
