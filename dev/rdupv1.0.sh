@@ -1,17 +1,16 @@
 #!/bin/bash
-#remove duplicated files
-#delete tmp files
-rm ./unique.tmp > /dev/null 2>&1
-rm ./duplicate.tmp > /dev/null 2>&1
-rm ./delete.tmp > /dev/null 2>&1
 
-#script begin
+#delete tmp files and avoid output stdin/errors
+if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
+then
+	:
+fi
+
+#validate tmp file delections
 if ! [ -f ./unique.tmp ] && ! [ -f ./duplicate.tmp ] && ! [ -f ./delete.tmp ]
 then
 
 	#variables
-	VAR_PARAMETER_MODE=""
-	VAR_PARAMETER_DIR=""
 	VAR_MODE=0
 
 	#functions
@@ -20,22 +19,29 @@ then
 	then
 		clear
 		echo "Duplicated files list:"
-		cat ./duplicate.tmp
+		if [ -f ./duplicate.tmp ]
+		then
+			cat ./duplicate.tmp
+		else
+			echo "No duplicated files found!"
+		fi
 	elif [ "$VAR_MODE" == "1" ]
 	then
-		for VAR_DELETE in $(cat ./duplicate.tmp)
+		for VAR_DELETE in $(cat < ./duplicate.tmp)
 		do
 			if rm "$VAR_DELETE" > /dev/null 2>&1
 			then
 				clear
 				echo "File $VAR_DELETE deleted successfuly"
-				sleep 1
-				clear
+				echo "$VAR_DELETE" >> ./success.log
 			else
-				echo "VAR_DELETE" >> ./error.tmp
+				echo "VAR_DELETE" >> ./error.log
 			fi
 		done
 		clear
+		echo "Script completed. Please, check files:"
+		echo "./success.log to check success"
+		echo "./error.log to check errors"
 		exit 0
 	fi
 	}
@@ -47,9 +53,10 @@ then
 		echo "Checking if file $VAR_FILE is duplicated. Please, wait!"
 		sleep 1
 		VAR_HASH=$(md5sum "$VAR_FILE" | awk '{print $1}')
-		if ! cat ./unique.tmp | grep "$VAR_HASH" > /dev/null 2>&1
+		VAR_SIZE=$(stat -c %s "$VAR_FILE")
+		if ! cat < ./unique.tmp | grep "$VAR_HASH$VAR_SIZE" > /dev/null 2>&1
 		then
-			echo "$VAR_HASH" >> ./unique.tmp
+			echo "$VAR_HASH$VAR_SIZE" >> ./unique.tmp
 		else
 			echo "$VAR_FILE" >> ./duplicate.tmp
 		fi
@@ -57,7 +64,7 @@ then
 	FUNC_MODE
 	}
 
-	#script beginner - check parameters
+	#script begin - check parameters
 	if [ "$1" == "-check" ] && [ -d "$2" ]
 	then
 		VAR_MODE=0
