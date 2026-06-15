@@ -5,11 +5,14 @@
 # find and check/remove duplicated files inside a directory tree (folder and subfolders)
 
 #delete tmp files and avoid output stdin/errors
+FUNC_CLEAN () }
 if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
 then
 	:
 fi
+}
 
+FUNC_CLEAR
 #validate tmp file delections
 if ! [ -f ./unique.tmp ] && ! [ -f ./duplicate.tmp ] && ! [ -f ./delete.tmp ]
 then
@@ -88,8 +91,5 @@ else
 	clear
 	echo "Something is wrong deleting tmp files. Please, check your permissions."
 fi
-if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
-then
-        :
-fi
+FUNC_CLEAR
 exit 0
