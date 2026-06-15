@@ -12,7 +12,9 @@ then
 fi
 }
 
+#func clear tmp files
 FUNC_CLEAR
+
 #validate tmp file delections
 if ! [ -f ./unique.tmp ] && ! [ -f ./duplicate.tmp ] && ! [ -f ./delete.tmp ]
 then
@@ -81,6 +83,7 @@ then
 			ARRAY_HASH+=("$VAR_FILE")
 		fi
 	done < find "$VAR_DIR" -type f
+	FUNC_HASH
 	}
 
 	#script begin - check parameters
