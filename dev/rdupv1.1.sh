@@ -70,6 +70,7 @@ do
 	if ! echo "${ARRAY_SIZE[@]}" | grep -w "$VAR_SIZE"
 	then
 		ARRAY_SIZE+=("$VAR_SIZE")
+		ARRAY_SIZE+=("$VAR_FILE")
 	else
 		ARRAY_FILE+=("$VAR_FILE")
 	fi
