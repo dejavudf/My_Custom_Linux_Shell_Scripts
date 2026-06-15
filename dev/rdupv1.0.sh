@@ -51,7 +51,8 @@ then
 	}
 
 	FUNC_HASH() {
-	find "$VAR_DIR" -type f | while read -r VAR_FILE; do
+	while read -r VAR_FILE
+	do
 		clear
 		echo "Checking if file $VAR_FILE is duplicated. Please, wait!"
 		VAR_HASH=$(md5sum "$VAR_FILE" | awk '{print $1}')
@@ -62,7 +63,7 @@ then
 		else
 			echo "$VAR_FILE" >> ./duplicate.tmp
 		fi
-	done
+	done < find "$VAR_DIR" -type f | 
 	FUNC_MODE
 	}
 
