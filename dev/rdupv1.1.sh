@@ -46,6 +46,8 @@ fi
 FUNC_HASH() {
 while IFS= read -r VAR_FILE
 do
+	clear
+	echo "Hashing file $VAR_FILE using MD5. Please wait."
 	VAR_HASH=$(md5sum "$VAR_FILE" | awk '{print $1}')
 	if ! echo "${ARRAY_HASH[@]}" | grep -w "$VAR_HASH"
 	then
@@ -61,6 +63,8 @@ FUNC_MODE
 FUNC_SIZE() {
 while IFS= read -r VAR_FILE
 do
+	clear
+	echo "Checking files size before hashing $VAR_FILE. Please wait."
 	VAR_SIZE=$(stat -c %S "$VAR_FILE")
 	if ! echo "${ARRAY_SIZE[@]}" | grep -w "$VAR_SIZE"
 	then
