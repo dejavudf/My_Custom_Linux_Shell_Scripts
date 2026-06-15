@@ -66,7 +66,7 @@ then
 		else
 			echo "$VAR_FILE" >> ./duplicate.tmp
 		fi
-	done < find "$VAR_DIR" -type f | 
+	done < find "$VAR_DIR" -type f
 	FUNC_MODE
 	}
 
