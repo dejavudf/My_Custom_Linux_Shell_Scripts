@@ -70,17 +70,30 @@ then
 	FUNC_MODE
 	}
 
+	FUNC_SIZE() {
+	while read -r VAR_FILE
+	do
+		VAR_SIZE=$(stat -c %S "$VAR_FILE")
+		if ! echo "${ARRAY_SIZE[@]}" | grep -w "$VAR_SIZE"
+		then
+			ARRAY_SIZE+=("$VAR_SIZE")
+		else
+			ARRAY_HASH+=("$VAR_SIZE")
+		fi
+	done < find "$VAR_DIR" -type f
+	}
+
 	#script begin - check parameters
 	if [ "$1" == "-check" ] && [ -d "$2" ]
 	then
 		VAR_MODE=0
 		VAR_DIR="$2"
-		FUNC_HASH
+		FUNC_SIZE
 	elif [ "$1" == "-remove" ] && [ -d "$2" ]
 	then
 		VAR_MODE=1
 		VAR_DIR="$2"
-		FUNC_HASH
+		FUNC_SIZE
 	else
 		clear
 		echo "Error: Invalid Options!"
