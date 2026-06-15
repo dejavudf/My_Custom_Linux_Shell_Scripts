@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#remove duplicated files
 #delete tmp files
 rm ./unique.tmp > /dev/null 2>&1
 rm ./duplicate.tmp > /dev/null 2>&1
