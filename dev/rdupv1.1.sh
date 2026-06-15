@@ -78,7 +78,7 @@ then
 		then
 			ARRAY_SIZE+=("$VAR_SIZE")
 		else
-			ARRAY_HASH+=("$VAR_SIZE")
+			ARRAY_HASH+=("$VAR_FILE")
 		fi
 	done < find "$VAR_DIR" -type f
 	}
