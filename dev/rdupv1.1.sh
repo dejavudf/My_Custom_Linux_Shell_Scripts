@@ -4,10 +4,15 @@
 # debian/ubuntu/mint
 # find and check/remove duplicated files inside a directory tree (folder and subfolders)
 
-#variables
+#variables declarations
 VAR_MODE=0
+VAR_ARRAY_SIZE=()
+VAR_ARRAY_HASH=()
+VAR_FILE=""
+VAR_HASH=""
+VAR_DELETE=""
 
-#functions
+#function mode (check or remove)
 FUNC_MODE() {
 if [ "$VAR_MODE" == "0" ]
 then
@@ -40,6 +45,7 @@ then
 fi
 }
 
+#function hash (calc file md5 hash)
 FUNC_HASH() {
 while read -r VAR_FILE
 do
@@ -57,6 +63,7 @@ done < find "$VAR_DIR" -type f
 FUNC_MODE
 }
 
+#function size (check files with same size)
 FUNC_SIZE() {
 while read -r VAR_FILE
 do
@@ -71,7 +78,7 @@ done < find "$VAR_DIR" -type f
 FUNC_HASH
 }
 
-#script begin - check parameters
+#script begin - check parameters before run script
 if [ "$1" == "-check" ] && [ -d "$2" ]
 then
 	VAR_MODE=0
@@ -87,5 +94,6 @@ else
 	echo "Error: Invalid Options!"
 	echo "Usage: ./script_name Option1 (mode) Option2 (dir)"
 	echo "Example: ./script_name { -check | -remove } { dir }"
+	exit 1
 fi
 exit 0
