@@ -12,6 +12,7 @@ ARRAY_DUP=()
 ARRAY_FILE=()
 VAR_FILE=""
 VAR_HASH=""
+VAR_DIR=""
 
 #function mode (check or remove)
 FUNC_MODE() {
