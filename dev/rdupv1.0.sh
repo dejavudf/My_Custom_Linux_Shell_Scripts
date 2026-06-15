@@ -1,4 +1,8 @@
 #!/bin/bash
+# by dejavudf - github.com/dejavudf
+# version 1.0 14/06/2026
+# debian/ubuntu/mint
+# compact and backup files and folders (zip)
 
 #delete tmp files and avoid output stdin/errors
 if rm ./unique.tmp > /dev/null 2>&1 && rm ./duplicate.tmp > /dev/null 2>&1 && rm ./delete.tmp > /dev/null 2>&1
