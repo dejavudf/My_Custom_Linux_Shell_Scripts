@@ -1,6 +1,6 @@
 #!/bin/bash
 # by dejavudf - github.com/dejavudf
-# version 1.0 14/06/2026
+# version 1.1 15/06/2026
 # debian/ubuntu/mint
 # find and check/remove duplicated files inside a directory tree (folder and subfolders)
 
@@ -12,7 +12,6 @@ VAR_ARRAY_DUP=()
 VAR_ARRAY_FILE=()
 VAR_FILE=""
 VAR_HASH=""
-VAR_DELETE=""
 
 #function mode (check or remove)
 FUNC_MODE() {
