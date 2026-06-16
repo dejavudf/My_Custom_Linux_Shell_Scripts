@@ -28,7 +28,7 @@ then
 	do
 		clear
 		echo "Deleting duplicated file $VAR_FILE. Please wait."
-		if rm /y "$VAR_FILE"
+		if rm -f "$VAR_FILE"
 		then
 			echo "$VAR_FILE" >> ./success.log
 		else
