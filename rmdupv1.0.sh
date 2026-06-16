@@ -32,7 +32,7 @@ then
 	then
 		for VAR_DELETE in $(cat < ./duplicate.tmp)
 		do
-			if rm "$VAR_DELETE" > /dev/null 2>&1
+			if rm -f "$VAR_DELETE" > /dev/null 2>&1
 			then
 				clear
 				echo "File $VAR_DELETE deleted successfuly"
