@@ -78,6 +78,10 @@ procura_v1.0.sh: find/search text inside files with tui menu (recursive director
 
 recoveryv1.0.sh: recovery deleted files via testdisk
 
+rmdupv1.0.sh - remove duplicated files bellow directory (tmp files)
+
+rmdupv1.1.sh - remove duplicated files bellow directory (using arrasy) - more fast
+
 tic_toc_toe_jogo_velha_brv1.0.sh: tic toc toe game - jogo da velha no brasil
 
 tic_toc_toe_jogo_velha_brv1.1.sh: tic toc toe game - jogo da velha no brasil - using arrays
