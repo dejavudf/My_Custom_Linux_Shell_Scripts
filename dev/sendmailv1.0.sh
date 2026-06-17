@@ -42,3 +42,35 @@ then
         VAR_FILE="message-file=./bckaudit/"$VAR_DT"_failure.log"
         FUNC_SEND
 fi
+
+##########################################################
+
+#!/bin/bash -xe
+
+#Variables
+VAR_DT=$(date '+%Y%m%d');
+VAR_SERVER="smtp.teste.net:25"
+VAR_FROM="alerta@teste.com.br"
+VAR_TO="teste@teste.com"
+VAR_SUBJ=""
+VAR_MESSAGE=""
+VAR_FILE=""
+VAR_CHARSET="utf-8"
+VAR_LOG="./mailto.log"
+VAR_CONTENT="message-content-type=auto"
+
+#function send email
+FUNC_SEND() {
+./mailto -v -l $VAR_LOG -o $VAR_CONTENT -a "$VAR_APPEND" -s $VAR_SERVER -f $VAR_FROM -t $VAR_TO -u "$VAR_SUBJ" -m "$VAR_MESSAGE" -o message-charset=$VAR_CHARSET
+}
+
+#script begin
+
+#validate
+if [ -f "/usr/local/Extreme_Networks/NetSight/appdata/InventoryMgr/configs/poe/"$VAR_DT"_injetor.csv" ]
+then
+	VAR_SUBJ="Lista de APs usando injetor POE conectados em Switches POE - $VAR_DT"
+	VAR_MESSAGE="Arquivo em anexo: "$VAR_DT"_injetor.csv"
+	VAR_APPEND="/usr/local/Extreme_Networks/NetSight/appdata/InventoryMgr/configs/poe/"$VAR_DT"_injetor.csv"
+	FUNC_SEND
+fi
